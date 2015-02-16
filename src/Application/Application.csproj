@@ -4,14 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D7A6E6A9-F1BD-43A1-BB14-60B2D629CCDF}</ProjectGuid>
+    <ProjectGuid>{7C9A099B-F43B-4B3B-B1A6-EB2138AA6B83}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HttpServer</RootNamespace>
-    <AssemblyName>HttpServer</AssemblyName>
+    <RootNamespace>Application</RootNamespace>
+    <AssemblyName>Application</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -36,9 +36,6 @@
     <Reference Include="Microsoft.Owin">
       <HintPath>..\Resttp\packages\Microsoft.Owin.3.0.0\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Diagnostics">
-      <HintPath>..\Resttp\packages\Microsoft.Owin.Diagnostics.3.0.0\lib\net45\Microsoft.Owin.Diagnostics.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Owin.Host.HttpListener">
       <HintPath>..\Resttp\packages\Microsoft.Owin.Host.HttpListener.3.0.0\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
     </Reference>
@@ -59,10 +56,17 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Resttp\Resttp.csproj">
+      <Project>{1882a030-5bf5-414d-b39b-192cf7569944}</Project>
+      <Name>Resttp</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

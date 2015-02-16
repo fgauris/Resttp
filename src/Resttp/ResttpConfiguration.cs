@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Resttp
 {
-    public class Class1
+    public class ResttpConfiguration
     {
+
+
     }
 }

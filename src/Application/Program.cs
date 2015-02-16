@@ -1,13 +1,12 @@
 ﻿using Microsoft.Owin.Hosting;
 using Owin;
+using Resttp;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace HttpServer
+namespace Application
 {
+    //Vietoj sito galima sukonvertuoti i dll'a ir naudoti IIS.
+    //Tam nebereikia sitos Program klases.
     class Program
     {
         static void Main(string[] args)
@@ -20,21 +19,6 @@ namespace HttpServer
                 Console.ReadKey();
                 Console.WriteLine("Resttp ended.");
             }
-        }
-
-
-    }
-
-    public class Startup
-    {
-        public void Configuration(IAppBuilder app)
-        {
-            app.Run(ctx => {
-                return ctx.Response.WriteAsync("Labas");
-            });
-
-
-
         }
     }
 }
