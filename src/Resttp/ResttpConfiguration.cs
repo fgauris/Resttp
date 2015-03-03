@@ -45,11 +45,11 @@ namespace Resttp
             };
         }
 
-        public void AddRoute(string id, string template, string controller, string action, dynamic defaults)
+        public void AddRoute(string id, string template, string controller = null, string action = null, dynamic defaults = null)
         {
             if(defaults == null)
             {
-                defaults = new { };
+                defaults = new object();
             }
             if (controller == null)
             {
@@ -61,15 +61,11 @@ namespace Resttp
             }
             else
             {
-                var paramsDictionary = new Dictionary<string, object>();
-                foreach (var prop in defaults.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public) as PropertyInfo[])
-                {
-                    paramsDictionary.Add(prop.Name, prop.GetValue(defaults));
-                }
-                AddRoute(id, template, controller, action, paramsDictionary);
+                AddRoute(id, template, controller, action, ConvertToDictionary(defaults));
             }
         }
 
+        
         private void AddRouteWithoutController(string id, string template, string action, dynamic defaults)
         {
             foreach (var controller in controllers)
@@ -102,6 +98,17 @@ namespace Resttp
         {
             throw new NotImplementedException();
         }
+
+        private IDictionary<string, object> ConvertToDictionary(dynamic dyn)
+        {
+            var dictionary = new Dictionary<string, object>();
+            foreach (var prop in dyn.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public) as PropertyInfo[])
+            {
+                dictionary.Add(prop.Name, prop.GetValue(dyn));
+            }
+            return dictionary;
+        }
+
     }
 
     public class HttpRoute
@@ -129,10 +136,10 @@ namespace Resttp
             if (parameters == null)
                 throw new ArgumentNullException("parameters");
 
-            Id = id.ToLower();
-            Template = template.ToLower();
-            ControllerName = controllerName.ToLower();
-            ActionName = actionName.ToLower();
+            Id = id;
+            Template = template;
+            ControllerName = controllerName;
+            ActionName = actionName;
             Params = parameters;
         }
     }
