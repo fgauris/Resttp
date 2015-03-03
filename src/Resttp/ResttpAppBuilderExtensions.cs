@@ -17,7 +17,8 @@ namespace Resttp
                 throw new ArgumentNullException("config");
             }
 
-            app.Use<ResttpComponent>();
+            app.Use<ResttpComponent>(config);
+            
         }
     }
 }

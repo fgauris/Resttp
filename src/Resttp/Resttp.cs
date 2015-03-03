@@ -10,9 +10,12 @@ namespace Resttp
     {
         private AppFunc _next;
 
-        public ResttpComponent(AppFunc next)
+        public ResttpConfiguration Config { get; set; }
+
+        public ResttpComponent(AppFunc next, ResttpConfiguration config)
         {
             _next = next;
+            Config = config;
         }
 
         public async Task Invoke(IDictionary<string, object> enviroment)

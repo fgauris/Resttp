@@ -2,7 +2,9 @@
 using Owin;
 using Resttp;
 using System;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("Resttp")]
 namespace Application
 {
     //Vietoj sito galima sukonvertuoti i dll'a ir naudoti IIS.
