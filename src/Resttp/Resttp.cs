@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 namespace Resttp
 {
+    using Microsoft.Owin;
     using AppFunc = Func<IDictionary<string, object>, Task>;
 
     public class ResttpComponent
@@ -20,6 +21,12 @@ namespace Resttp
 
         public async Task Invoke(IDictionary<string, object> enviroment)
         {
+            var context = new OwinContext(enviroment);
+            var pathBase = context.Request.PathBase;
+            var path = context.Request.Path;
+            IReadableStringCollection query = context.Request.Query;
+            pathBase.ToString();
+            path.ToString();
             //Do something here....
             await _next(enviroment);
             //Do something here too....

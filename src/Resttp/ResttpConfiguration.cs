@@ -1,10 +1,7 @@
-﻿using System;
+﻿using Microsoft.Owin;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Reflection;
-using System.Dynamic;
 
 namespace Resttp
 {
@@ -94,8 +91,12 @@ namespace Resttp
             }
         }
 
-        public HttpRoute GetRoute(string path, string httpMethod)
+        public HttpRoute GetRoute(string path, IReadableStringCollection query, string httpMethod)
         {
+            
+            
+
+
             throw new NotImplementedException();
         }
 
@@ -110,7 +111,7 @@ namespace Resttp
         }
 
     }
-
+    
     public class HttpRoute
     {
         public string Id { get; set; }
@@ -121,8 +122,8 @@ namespace Resttp
 
         public string ActionName { get; set; }
 
-        public Dictionary<string, object> Params { get; set; }
-
+        public IDictionary<string, object> Params { get; set; }
+        
         public HttpRoute(string id, string template, string controllerName, string actionName, Dictionary<string, object> parameters)
         {
             if (id == null)
