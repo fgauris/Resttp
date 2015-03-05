@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Resttp
 {
-    [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
     public sealed class ControllerRouteAttribute : Attribute
     {
         private string _template;

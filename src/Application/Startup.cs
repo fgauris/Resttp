@@ -14,7 +14,7 @@ public class Startup
     public void Configuration(IAppBuilder app)
     {
         var config = new ResttpConfiguration();
-
+        config.MapHttpRoutesFromAttributes();
         config.HttpRoutes.AddRoute
            (
            "Home",

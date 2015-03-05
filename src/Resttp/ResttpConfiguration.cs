@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Linq;
 
 namespace Resttp
 {
@@ -13,16 +14,32 @@ namespace Resttp
         {
             HttpRoutes = new HttpRouteList();
         }
-
+        #region Routing
         public void MapHttpRoutesFromAttributes()
         {
+            //Rasti actions su actionRoute
+            //Patikrinti ar controlleriai turi ControllerRoute attributa
+            //Jei neturi, tai exception
+            //Jei turi zjbs
 
+            var ctrls = Assembly.GetEntryAssembly()
+                .GetTypes()
+                .Where(t => t.BaseType == typeof(RestController));
+            var actions = ctrls
+                .SelectMany(t => t.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+            ctrls.ToString();
+            actions.ToString();
         }
+
+
+
+
+        #endregion
     }
 
     public class HttpRouteList
     {
-        private readonly List<HttpRoute> _routes;
+        private readonly IList<HttpRoute> _routes;
 
         //For testing only
         private readonly string[] controllers;
@@ -122,9 +139,9 @@ namespace Resttp
 
         public string ActionName { get; set; }
 
-        public IDictionary<string, object> Params { get; set; }
+        public IDictionary<string, object> DefaultParams { get; set; }
         
-        public HttpRoute(string id, string template, string controllerName, string actionName, Dictionary<string, object> parameters)
+        public HttpRoute(string id, string template, string controllerName, string actionName, IDictionary<string, object> defaults)
         {
             if (id == null)
                 throw new ArgumentNullException("id");
@@ -134,14 +151,14 @@ namespace Resttp
                 throw new ArgumentNullException("controllerName");
             if (actionName == null)
                 throw new ArgumentNullException("actionName");
-            if (parameters == null)
+            if (defaults == null)
                 throw new ArgumentNullException("parameters");
 
             Id = id;
             Template = template;
             ControllerName = controllerName;
             ActionName = actionName;
-            Params = parameters;
+            DefaultParams = defaults;
         }
     }
 }
