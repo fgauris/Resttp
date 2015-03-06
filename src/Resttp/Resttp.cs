@@ -17,20 +17,22 @@ namespace Resttp
         {
             _next = next;
             Config = config;
+
+            var resolver = new HttpRouteResolver(Config.HttpRoutes);
+            var s1 = resolver.Resolve(new PathString("/Pirmas/Labas")); s1.ToString();
+            var s2 = resolver.Resolve(new PathString("/pirmas/labas")); s2.ToString();
+            var s3 = resolver.Resolve(new PathString("/Antras/labas")); s3.ToString();
+
+
+
         }
 
         public async Task Invoke(IDictionary<string, object> enviroment)
         {
-            var context = new OwinContext(enviroment);
-            var pathBase = context.Request.PathBase;
-            var path = context.Request.Path;
-            IReadableStringCollection query = context.Request.Query;
-            pathBase.ToString();
-            path.ToString();
             //Do something here....
             await _next(enviroment);
             //Do something here too....
-
+            
             //var response = enviroment["owin.ResponseBody"] as Stream;
             //using (var writer = new StreamWriter(response))
             //{

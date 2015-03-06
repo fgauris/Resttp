@@ -24,14 +24,16 @@ namespace Resttp
             {
                 var actionAttr = action.GetCustomAttribute<ActionRouteAttribute>();
                 var ctrlAttr = action.DeclaringType.GetCustomAttribute<ControllerRouteAttribute>();
-                
+
                 if (HttpRoutes.GetRoute(action.DeclaringType.Name, action.Name) == null)
                 {
+                    var actionName = action.Name;
+                    var controllerName = action.DeclaringType.Name.Replace("Controller", string.Empty);
                     HttpRoutes.AddRoute(
-                        id: actionAttr.Id ?? action.DeclaringType.Name + action.Name,
-                        template: ctrlAttr.Template + "/" + actionAttr.Template,
-                        controller: action.DeclaringType.Name,
-                        action: action.Name
+                        id: actionAttr.Id ?? controllerName + actionName,
+                        template: '/' + ctrlAttr.Template.Trim('/') + "/" + actionAttr.Template.Trim('/'),
+                        controller: controllerName,
+                        action: actionName
                     );
                 }
             }
@@ -59,7 +61,9 @@ namespace Resttp
 
     public class HttpRouteList
     {
-        protected readonly IList<HttpRoute> _routes;
+        private readonly IList<HttpRoute> _routes;
+
+        public IList<HttpRoute> Routes { get { return _routes; } }
 
         //For testing only
         private readonly IEnumerable<string> controllers;
@@ -69,16 +73,26 @@ namespace Resttp
         public HttpRouteList()
         {
             _routes = new List<HttpRoute>();
-            controllers = GetControllers(Assembly.GetEntryAssembly()).Select(c => c.Name);
+            controllers = GetControllers(Assembly.GetEntryAssembly()).Select(c => c.Name.Replace("Controller", string.Empty));
             httpMethods = new[]
             {
                 "Get", "Post", "Put", "Delete", "Patch", "Head", "Options"
             };
         }
 
+        public HttpRoute GetRoute(string id)
+        {
+            return Routes.FirstOrDefault(r => r.Id == id);
+        }
+
+        public HttpRoute GetRoute(string controller, string action)
+        {
+            return Routes.FirstOrDefault(r => r.ControllerName == controller && r.ActionName == action);
+        }
+
         public void AddRoute(string id, string template, string controller = null, string action = null, dynamic defaults = null)
         {
-            if(defaults == null)
+            if (defaults == null)
             {
                 defaults = new object();
             }
@@ -112,7 +126,7 @@ namespace Resttp
             }
         }
 
-        private void AddRoute(string id, string template, string controllerName, string actionName, Dictionary<string, object> parameters)
+        private void AddRoute(string id, string template, string controllerName, string actionName, IDictionary<string, object> parameters)
         {
             if (parameters == null)
             {
@@ -123,26 +137,11 @@ namespace Resttp
 
         private void AddRoute(HttpRoute route)
         {
-            var oldRoute = _routes.FirstOrDefault(r => r.ActionName == route.ActionName && r.ControllerName == route.ControllerName);
+            var oldRoute = Routes.FirstOrDefault(r => r.ActionName == route.ActionName && r.ControllerName == route.ControllerName);
             if (oldRoute == null)
             {
-                _routes.Add(route);
+                Routes.Add(route);
             }
-        }
-
-        public HttpRoute GetRoute(string path, IReadableStringCollection query, string httpMethod)
-        {
-            throw new NotImplementedException();
-        }
-
-        public HttpRoute GetRoute(string id)
-        {
-            return _routes.FirstOrDefault(r => r.Id == id);
-        }
-
-        public HttpRoute GetRoute(string controller, string action)
-        {
-            return _routes.FirstOrDefault(r => r.ControllerName == controller && r.ActionName == action);
         }
 
         private IDictionary<string, object> ConvertToDictionary(dynamic dyn)
@@ -162,12 +161,61 @@ namespace Resttp
         }
 
     }
-    
+
+    public class HttpRouteResolver
+    {
+        private readonly HttpRouteList _routes;
+
+        public HttpRouteList RouteList { get { return _routes; } }
+
+        public HttpRouteResolver(HttpRouteList routes)
+        {
+            _routes = routes;
+        }
+
+        public HttpRoute Resolve(OwinRequest request)
+        {
+            return Resolve(request.Path);
+        }
+
+        public HttpRoute Resolve(PathString path)
+        {
+            if (!path.HasValue)
+            {
+                return null;
+            }
+            foreach (var route in RouteList.Routes)
+            {
+                var templatePath = route.ResolvedTemplate.Split('?')[0];
+                if(path.Value.Equals(templatePath, StringComparison.OrdinalIgnoreCase))
+                {
+                    return route;
+                }
+            }
+            return null;
+        }
+    }
+
     public class HttpRoute
     {
         public string Id { get; set; }
 
         public string Template { get; set; }
+
+        public string ResolvedTemplate
+        {
+            get
+            {
+                var template = Template;
+                template = template.Replace("{controller}", ControllerName);
+                template = template.Replace("{action}", ActionName);
+                foreach (var param in DefaultParams)
+                {
+                    template = template.Replace("{" + param.Key + "}", param.Value.ToString());
+                }
+                return template;
+            }
+        }
 
         public string ControllerName { get; set; }
 
@@ -193,6 +241,11 @@ namespace Resttp
             if (defaults == null)
                 throw new ArgumentNullException("parameters");
 
+            if(!template.StartsWith("/"))
+            {
+                throw new ArgumentException("The template must start with a '/' followed by one or more characters.");
+            }
+
             Id = id;
             Template = template;
             ControllerName = controllerName;
@@ -200,6 +253,6 @@ namespace Resttp
             DefaultParams = defaults;
         }
 
-        
+
     }
 }

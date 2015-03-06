@@ -19,21 +19,21 @@ public class Startup
            (
            "Home",
            "/Home/Index/",
-           controller: "HomeController", 
+           controller: "Home", 
            action: "Index"
            );
 
         config.HttpRoutes.AddRoute
            (
            "Home",
-           "{lang}/Home/Index/",
-           "HomeController", "Index"
+           "/{lang}/Home/Index/",
+           "Home", "Index"
            );
         config.HttpRoutes.AddRoute
            (
            "Home",
-           "{lang}/Home/Index/{id}",
-           "HomeController", "Index", new { lang = "lt" }
+           "/{lang}/Home/Index/{id}",
+           "Home", "Index", new { lang = "lt" }
            );
 
 
@@ -42,6 +42,7 @@ public class Startup
             "Default",
             "/{controller}/{id}"
             );
+        
         app.UseResttp(config);
     }
 }
