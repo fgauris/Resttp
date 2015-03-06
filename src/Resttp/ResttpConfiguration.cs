@@ -17,45 +17,62 @@ namespace Resttp
         #region Routing
         public void MapHttpRoutesFromAttributes()
         {
-            //Rasti actions su actionRoute
-            //Patikrinti ar controlleriai turi ControllerRoute attributa
-            //Jei neturi, tai exception
-            //Jei turi zjbs
+            var actions = GetActionsWithRouteAttribute(Assembly.GetEntryAssembly());
+            ValidateRouteAttributeExistance(actions);
 
-            var ctrls = Assembly.GetEntryAssembly()
-                .GetTypes()
-                .Where(t => t.BaseType == typeof(RestController));
-            var actions = ctrls
-                .SelectMany(t => t.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
-            ctrls.ToString();
-            actions.ToString();
+            foreach (var action in actions)
+            {
+                var actionAttr = action.GetCustomAttribute<ActionRouteAttribute>();
+                var ctrlAttr = action.DeclaringType.GetCustomAttribute<ControllerRouteAttribute>();
+                
+                if (HttpRoutes.GetRoute(action.DeclaringType.Name, action.Name) == null)
+                {
+                    HttpRoutes.AddRoute(
+                        id: actionAttr.Id ?? action.DeclaringType.Name + action.Name,
+                        template: ctrlAttr.Template + "/" + actionAttr.Template,
+                        controller: action.DeclaringType.Name,
+                        action: action.Name
+                    );
+                }
+            }
         }
 
+        private void ValidateRouteAttributeExistance(IEnumerable<MethodInfo> actions)
+        {
+            foreach (var action in actions)
+            {
+                if (action.DeclaringType.GetCustomAttribute<ControllerRouteAttribute>() == null)
+                    throw new RoutingException(action);
+            }
+        }
 
-
+        private IEnumerable<MethodInfo> GetActionsWithRouteAttribute(Assembly assembly)
+        {
+            return assembly.GetTypes()
+                .Where(t => t.BaseType == typeof(RestController))
+                .SelectMany(t => t.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
+                .Where(m => m.GetCustomAttribute<ActionRouteAttribute>() != null);
+        }
 
         #endregion
     }
 
     public class HttpRouteList
     {
-        private readonly IList<HttpRoute> _routes;
+        protected readonly IList<HttpRoute> _routes;
 
         //For testing only
-        private readonly string[] controllers;
+        private readonly IEnumerable<string> controllers;
 
-        private readonly string[] httpMethods;
+        private readonly IEnumerable<string> httpMethods;
 
         public HttpRouteList()
         {
             _routes = new List<HttpRoute>();
-            controllers = new[]
-            {
-                "account", "home", "text", "time"
-            };
+            controllers = GetControllers(Assembly.GetEntryAssembly()).Select(c => c.Name);
             httpMethods = new[]
             {
-                "get", "post", "put", "delete", "patch", "head"
+                "Get", "Post", "Put", "Delete", "Patch", "Head", "Options"
             };
         }
 
@@ -79,7 +96,6 @@ namespace Resttp
             }
         }
 
-        
         private void AddRouteWithoutController(string id, string template, string action, dynamic defaults)
         {
             foreach (var controller in controllers)
@@ -102,19 +118,31 @@ namespace Resttp
             {
                 parameters = new Dictionary<string, object>();
             }
-            else
+            AddRoute(new HttpRoute(id, template, controllerName, actionName, parameters));
+        }
+
+        private void AddRoute(HttpRoute route)
+        {
+            var oldRoute = _routes.FirstOrDefault(r => r.ActionName == route.ActionName && r.ControllerName == route.ControllerName);
+            if (oldRoute == null)
             {
-                _routes.Add(new HttpRoute(id, template, controllerName, actionName, parameters));
+                _routes.Add(route);
             }
         }
 
         public HttpRoute GetRoute(string path, IReadableStringCollection query, string httpMethod)
         {
-            
-            
-
-
             throw new NotImplementedException();
+        }
+
+        public HttpRoute GetRoute(string id)
+        {
+            return _routes.FirstOrDefault(r => r.Id == id);
+        }
+
+        public HttpRoute GetRoute(string controller, string action)
+        {
+            return _routes.FirstOrDefault(r => r.ControllerName == controller && r.ActionName == action);
         }
 
         private IDictionary<string, object> ConvertToDictionary(dynamic dyn)
@@ -125,6 +153,12 @@ namespace Resttp
                 dictionary.Add(prop.Name, prop.GetValue(dyn));
             }
             return dictionary;
+        }
+
+        private IEnumerable<Type> GetControllers(Assembly assembly)
+        {
+            return assembly.GetTypes()
+                .Where(t => t.BaseType == typeof(RestController));
         }
 
     }
@@ -140,7 +174,12 @@ namespace Resttp
         public string ActionName { get; set; }
 
         public IDictionary<string, object> DefaultParams { get; set; }
-        
+
+        public HttpRoute()
+        {
+            DefaultParams = new Dictionary<string, object>();
+        }
+
         public HttpRoute(string id, string template, string controllerName, string actionName, IDictionary<string, object> defaults)
         {
             if (id == null)
@@ -160,5 +199,7 @@ namespace Resttp
             ActionName = actionName;
             DefaultParams = defaults;
         }
+
+        
     }
 }

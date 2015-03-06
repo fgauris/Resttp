@@ -7,10 +7,13 @@ using System.Threading.Tasks;
 
 namespace Application.Controllers
 {
+    [ControllerRoute("Pirmas")]
     public class PirmasController : RestController
     {
         public int Sttrt { get; set; }
 
+        [Get]
+        [ActionRoute("labas")]
         public void Labas()
         {
 

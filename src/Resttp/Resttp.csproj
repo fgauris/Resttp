@@ -53,8 +53,10 @@
     <Compile Include="Resttp.cs" />
     <Compile Include="ResttpAppBuilderExtensions.cs" />
     <Compile Include="ResttpConfiguration.cs" />
-    <Compile Include="RoutingAttributes\ActionRouteAttribute.cs" />
-    <Compile Include="RoutingAttributes\ControllerRouteAttribute.cs" />
+    <Compile Include="Routing\ActionRouteAttribute.cs" />
+    <Compile Include="Routing\ControllerRouteAttribute.cs" />
+    <Compile Include="Routing\Exceptions.cs" />
+    <Compile Include="Routing\HttpVerbAttributes.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
