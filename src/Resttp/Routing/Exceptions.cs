@@ -10,11 +10,5 @@ namespace Resttp
     public class RoutingException : Exception
     {
         public RoutingException(string message): base(message){}
-
-        public RoutingException(MethodInfo action)
-            : base(string.Format("Action '{0}' contains route attribute, but controller '{1}' does not.", action.Name, action.DeclaringType.Name))
-        {
-        }
-
     }
 }

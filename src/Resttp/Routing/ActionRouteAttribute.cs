@@ -11,15 +11,17 @@ namespace Resttp
     {
         private string _template;
 
-        public ActionRouteAttribute(string template)
-        {
-            _template = template;
-        }
-
         /// <summary>
         /// Id of a route
         /// </summary>
         public string Id { get; set; }
         public string Template { get { return _template; } }
+
+        public ActionRouteAttribute(string template)
+        {
+            _template = template;
+        }
+
+        
     }
 }

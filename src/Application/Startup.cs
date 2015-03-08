@@ -14,35 +14,28 @@ public class Startup
     public void Configuration(IAppBuilder app)
     {
         var config = new ResttpConfiguration();
-        config.MapHttpRoutesFromAttributes();
-        config.HttpRoutes.AddRoute
-           (
-           "Home",
-           "/Home/Index/",
-           controller: "Home", 
-           action: "Index"
-           );
+        //config.MapHttpRoutesFromAttributes();
+        
 
-        config.HttpRoutes.AddRoute
-           (
-           "Home",
-           "/{lang}/Home/Index/",
-           "Home", "Index"
-           );
-        config.HttpRoutes.AddRoute
-           (
-           "Home",
-           "/{lang}/Home/Index/{id}",
-           "Home", "Index", new { lang = "lt" }
-           );
-
-
+     
         config.HttpRoutes.AddRoute
             (
-            "Default",
-            "/{controller}/{id}"
-            );
-        
+            "Home",
+            "/lt/",
+            new
+            {
+                controller = "Home"
+            });
+        config.HttpRoutes.AddRoute
+            (
+            "Home",
+            "/lt/{action}",
+            new
+            {
+                controller = "Home"
+            });
+
+
         app.UseResttp(config);
     }
 }

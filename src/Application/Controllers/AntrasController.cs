@@ -16,7 +16,7 @@ namespace Application.Controllers
 
         }
 
-        [ActionRoute("labas/id")]
+        [ActionRoute("options/{id}")]
         public void Options()
         {
 

@@ -56,6 +56,9 @@
     <Compile Include="Routing\ActionRouteAttribute.cs" />
     <Compile Include="Routing\ControllerRouteAttribute.cs" />
     <Compile Include="Routing\Exceptions.cs" />
+    <Compile Include="Routing\HttpRoute.cs" />
+    <Compile Include="Routing\HttpRouteList.cs" />
+    <Compile Include="Routing\HttpRouteResolver.cs" />
     <Compile Include="Routing\HttpVerbAttributes.cs" />
   </ItemGroup>
   <ItemGroup>

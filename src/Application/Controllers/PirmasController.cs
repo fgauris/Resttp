@@ -10,9 +10,13 @@ namespace Application.Controllers
     [ControllerRoute("Pirmas")]
     public class PirmasController : RestController
     {
-        public int Sttrt { get; set; }
 
-        [Get]
+        public void Index()
+        {
+
+        }
+
+        [Http("Get")]
         [ActionRoute("labas")]
         public void Labas()
         {

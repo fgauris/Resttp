@@ -18,10 +18,7 @@ namespace Resttp
             _next = next;
             Config = config;
 
-            var resolver = new HttpRouteResolver(Config.HttpRoutes);
-            var s1 = resolver.Resolve(new PathString("/Pirmas/Labas")); s1.ToString();
-            var s2 = resolver.Resolve(new PathString("/pirmas/labas")); s2.ToString();
-            var s3 = resolver.Resolve(new PathString("/Antras/labas")); s3.ToString();
+            TestRoutes(new HttpRouteResolver(Config.HttpRoutes));
 
 
 
@@ -32,12 +29,26 @@ namespace Resttp
             //Do something here....
             await _next(enviroment);
             //Do something here too....
-            
+
             //var response = enviroment["owin.ResponseBody"] as Stream;
             //using (var writer = new StreamWriter(response))
             //{
             //    return writer.WriteAsync("Hello!");
             //}
         }
+
+        private void TestRoutes(HttpRouteResolver resolver)
+        {
+            var s1 = resolver.Resolve(new PathString("/lt/Index"), "Post"); s1.ToString();
+            var s3 = resolver.Resolve(new PathString("/lt"), "Get"); s3.ToString();
+            var s4 = resolver.Resolve(new PathString("/lt"), "Post"); s4.ToString();
+            var s5 = resolver.Resolve(new PathString("/lt"), "Put"); s5.ToString();
+            //var s3 = resolver.Resolve(new PathString("/Antras/labas")); s3.ToString();
+
+
+
+        }
+
+
     }
 }
