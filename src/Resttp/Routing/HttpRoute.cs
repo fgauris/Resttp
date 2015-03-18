@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Resttp
@@ -18,6 +19,17 @@ namespace Resttp
             {
                 var template = Template;
                 return template;
+            }
+        }
+
+        public string ResolvedPath
+        {
+            get
+            {
+                var path = Template.Split('?')[0];
+                var propRegex = new Regex(@"\/*{\w+}\/*");
+
+                return path;
             }
         }
 
@@ -52,6 +64,15 @@ namespace Resttp
             HttpMethodName = httpMethodName;
         }
 
+        public bool Matches(string path)
+        {
+            var regex = new Regex(@"/*{\w+}");
+            var templateRegex = regex.Replace(Template, @"(/*[A-Za-z0-9]+)");
+
+
+
+            throw new NotImplementedException();
+        }
 
     }
 }
