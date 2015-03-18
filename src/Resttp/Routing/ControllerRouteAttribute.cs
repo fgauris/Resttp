@@ -11,6 +11,8 @@ namespace Resttp
     {
         private string _template;
 
+        public string Name { get; set; }
+
         public ControllerRouteAttribute(string template)
         {
             _template = template;

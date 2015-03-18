@@ -48,9 +48,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\ControllerHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RestController.cs" />
-    <Compile Include="Resttp.cs" />
+    <Compile Include="ResttpComponent.cs" />
     <Compile Include="ResttpAppBuilderExtensions.cs" />
     <Compile Include="ResttpConfiguration.cs" />
     <Compile Include="Routing\ActionRouteAttribute.cs" />
@@ -59,7 +60,8 @@
     <Compile Include="Routing\HttpRoute.cs" />
     <Compile Include="Routing\HttpRouteList.cs" />
     <Compile Include="Routing\HttpRouteResolver.cs" />
-    <Compile Include="Routing\HttpVerbAttributes.cs" />
+    <Compile Include="Routing\HttpAttribute.cs" />
+    <Compile Include="Routing\RoutingComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

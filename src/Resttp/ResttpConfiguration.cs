@@ -31,8 +31,8 @@ namespace Resttp
                 {
                     var actionName = action.Name;
                     var controllerName = action.DeclaringType.Name.Replace("Controller", string.Empty);
-                    HttpRoutes.AddRoute(
-                        id: actionAttr.Id ?? controllerName + actionName,
+                    HttpRoutes.AddRoutes(
+                        name: actionAttr.Name ?? ctrlAttr.Name ?? controllerName + actionName,
                         template: '/' + ctrlAttr.Template.Trim('/') + "/" + actionAttr.Template.Trim('/'),
                         defaults: new
                         {

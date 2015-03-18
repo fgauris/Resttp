@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 namespace Resttp
 {
     using Microsoft.Owin;
+    using System.IO;
     using AppFunc = Func<IDictionary<string, object>, Task>;
 
     public class ResttpComponent
@@ -18,23 +19,24 @@ namespace Resttp
             _next = next;
             Config = config;
 
-            TestRoutes(new HttpRouteResolver(Config.HttpRoutes));
-
-
-
+            //TestRoutes(new HttpRouteResolver(Config.HttpRoutes));
         }
 
         public async Task Invoke(IDictionary<string, object> enviroment)
         {
+            var route = enviroment["resttp.Route"] as HttpRoute;
+            route.ToString();
             //Do something here....
             await _next(enviroment);
             //Do something here too....
 
-            //var response = enviroment["owin.ResponseBody"] as Stream;
-            //using (var writer = new StreamWriter(response))
-            //{
-            //    return writer.WriteAsync("Hello!");
-            //}
+            var response = enviroment["owin.ResponseBody"] as Stream;
+            enviroment["owin.ResponseStatusCode"] = 200;
+            using (var writer = new StreamWriter(response))
+            {
+                await writer.WriteAsync("Hello!");
+                return;
+            }
         }
 
         private void TestRoutes(HttpRouteResolver resolver)

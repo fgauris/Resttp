@@ -14,7 +14,7 @@ namespace Resttp
         /// <summary>
         /// Id of a route
         /// </summary>
-        public string Id { get; set; }
+        public string Name { get; set; }
         public string Template { get { return _template; } }
 
         public ActionRouteAttribute(string template)

@@ -14,11 +14,11 @@ public class Startup
     public void Configuration(IAppBuilder app)
     {
         var config = new ResttpConfiguration();
-        //config.MapHttpRoutesFromAttributes();
+        config.MapHttpRoutesFromAttributes();
         
 
      
-        config.HttpRoutes.AddRoute
+        config.HttpRoutes.AddRoutes
             (
             "Home",
             "/lt/",
@@ -26,7 +26,7 @@ public class Startup
             {
                 controller = "Home"
             });
-        config.HttpRoutes.AddRoute
+        config.HttpRoutes.AddRoutes
             (
             "Home",
             "/lt/{action}",

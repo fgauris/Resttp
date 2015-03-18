@@ -17,6 +17,7 @@ namespace Resttp
                 throw new ArgumentNullException("config");
             }
 
+            app.Use<RoutingComponent>(new HttpRouteResolver(config.HttpRoutes));
             app.Use<ResttpComponent>(config);
             
         }
