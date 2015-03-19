@@ -1,8 +1,6 @@
-﻿using Microsoft.Owin.Hosting;
-using Owin;
-using Resttp;
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
+using Microsoft.Owin.Hosting;
 
 [assembly: InternalsVisibleTo("Resttp")]
 namespace Application

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Resttp.Common
 {
@@ -28,7 +26,7 @@ namespace Resttp.Common
 
         public static IEnumerable<MethodInfo> GetActions(Assembly assembly, string controllerName)
         {
-            return ControllerHelper.GetController(assembly, controllerName)
+            return GetController(assembly, controllerName)
                 .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
         }
 

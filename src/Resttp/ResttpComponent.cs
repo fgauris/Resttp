@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Owin;
 
 namespace Resttp
 {
-    using Microsoft.Owin;
-    using System.IO;
     using AppFunc = Func<IDictionary<string, object>, Task>;
 
     public class ResttpComponent
@@ -39,7 +39,7 @@ namespace Resttp
             }
         }
 
-        private void TestRoutes(HttpRouteResolver resolver)
+        private void TestRoutes(IHttpRouteResolver resolver)
         {
             var s1 = resolver.Resolve(new PathString("/lt/Index"), "Post"); s1.ToString();
             var s3 = resolver.Resolve(new PathString("/lt"), "Get"); s3.ToString();

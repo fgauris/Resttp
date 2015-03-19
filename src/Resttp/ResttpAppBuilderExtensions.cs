@@ -1,5 +1,5 @@
-﻿using Owin;
-using System;
+﻿using System;
+using Owin;
 
 namespace Resttp
 {

@@ -1,9 +1,10 @@
-﻿using Resttp.Common;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using Resttp.Common;
 
 namespace Resttp
 {
@@ -15,12 +16,12 @@ namespace Resttp
 
         //For testing only
 
-        private readonly IEnumerable<string> httpMethods;
+        private readonly IEnumerable<string> _httpMethods;
 
         public HttpRouteList()
         {
             _routes = new List<HttpRoute>();
-            httpMethods = new[]
+            _httpMethods = new[]
             {
                 "Get", "Post", "Put", "Delete", "Patch", "Head", "Options"
             };
@@ -42,9 +43,9 @@ namespace Resttp
                 defaults = new object();
             }
             var defaultsDictionary = ConvertToDictionary(defaults) as IDictionary<string, object>;
-            string controller = defaultsDictionary.ContainsKey("controller") ? defaultsDictionary["controller"].ToString() : null;
-            string action = defaultsDictionary.ContainsKey("action") ? defaultsDictionary["action"].ToString() : null;
-            string httpMethod = defaultsDictionary.ContainsKey("httpMethod") ? defaultsDictionary["httpMethod"].ToString() : null;
+            var controller = defaultsDictionary.ContainsKey("controller") ? defaultsDictionary["controller"].ToString() : null;
+            var action = defaultsDictionary.ContainsKey("action") ? defaultsDictionary["action"].ToString() : null;
+            var httpMethod = defaultsDictionary.ContainsKey("httpMethod") ? defaultsDictionary["httpMethod"].ToString() : null;
             var resolvedTemplate = ResolveTemplate(template, defaultsDictionary);
             AddRoute(name, resolvedTemplate, controller, action, httpMethod);
         }
@@ -59,7 +60,7 @@ namespace Resttp
 
         private void AddRouteWithoutAction(string name, string template, string controller, string httpMethod)
         {
-            IEnumerable<MethodInfo> actions = ControllerHelper.GetActions(EntryAssembly, controller);
+            var actions = ControllerHelper.GetActions(EntryAssembly, controller);
             if (!template.Contains("{action}"))
             {
                 actions = actions
@@ -97,21 +98,17 @@ namespace Resttp
 
         private IDictionary<string, object> ConvertToDictionary(dynamic dyn)
         {
-            var dictionary = new Dictionary<string, object>();
-            foreach (var prop in dyn.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public) as PropertyInfo[])
-            {
-                dictionary.Add(prop.Name, prop.GetValue(dyn));
-            }
-            return dictionary;
+            if (dyn != null)
+                return (dyn.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public) as PropertyInfo[])
+                    .ToDictionary<PropertyInfo, string, object>(prop => prop.Name, prop => prop.GetValue(dyn));
+            else 
+                return  new Dictionary<string, object>();
         }
 
         private string ResolveTemplate(string template, IDictionary<string, object> parameters)
         {
-            var resolved = new System.Text.StringBuilder(template);
-            foreach (var parameter in parameters)
-            {
-                resolved = resolved.Replace("{" + parameter.Key + "}", parameter.Value.ToString());
-            }
+            var resolved = new StringBuilder(template);
+            resolved = parameters.Aggregate(resolved, (current, parameter) => current.Replace("{" + parameter.Key + "}", parameter.Value.ToString()));
             return resolved.ToString();
         }
 
@@ -129,7 +126,7 @@ namespace Resttp
             if (httpMethod != null)
                 return httpMethod;
 
-            string defaultMethod = null;
+            string defaultMethod;
             if (actionName.StartsWith("Get", StringComparison.OrdinalIgnoreCase))
                 defaultMethod = "Get";
             else if (actionName.StartsWith("Post", StringComparison.OrdinalIgnoreCase))

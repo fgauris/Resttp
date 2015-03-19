@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Owin;
 
 namespace Resttp
 {
-    using Microsoft.Owin;
-    using System.IO;
     using AppFunc = Func<IDictionary<string, object>, Task>;
 
     public class RoutingComponent

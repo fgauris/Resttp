@@ -1,9 +1,6 @@
-﻿using Microsoft.Owin;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Collections;
+using System.Reflection;
 
 namespace Resttp
 {
@@ -19,7 +16,7 @@ namespace Resttp
         #region Routing
         public void MapHttpRoutesFromAttributes()
         {
-            var actions = GetActionsWithRouteAttribute(Assembly.GetEntryAssembly());
+            var actions = GetActionsWithRouteAttribute(Assembly.GetEntryAssembly()).ToArray();
             ValidateRouteAttributeExistance(actions);
 
             foreach (var action in actions)
@@ -27,30 +24,29 @@ namespace Resttp
                 var actionAttr = action.GetCustomAttribute<ActionRouteAttribute>();
                 var ctrlAttr = action.DeclaringType.GetCustomAttribute<ControllerRouteAttribute>();
 
-                if (HttpRoutes.GetRoute(action.DeclaringType.Name, action.Name) == null)
-                {
-                    var actionName = action.Name;
-                    var controllerName = action.DeclaringType.Name.Replace("Controller", string.Empty);
-                    HttpRoutes.AddRoutes(
-                        name: actionAttr.Name ?? ctrlAttr.Name ?? controllerName + actionName,
-                        template: '/' + ctrlAttr.Template.Trim('/') + "/" + actionAttr.Template.Trim('/'),
-                        defaults: new
-                        {
-                            controller = controllerName,
-                            action = actionName
-                        }
-                    );
-                }
+                if (HttpRoutes.GetRoute(action.DeclaringType.Name, action.Name) != null)
+                    return;
+                var actionName = action.Name;
+                var controllerName = action.DeclaringType.Name.Replace("Controller", string.Empty);
+                HttpRoutes.AddRoutes(
+                    name: actionAttr.Name ?? ctrlAttr.Name ?? controllerName + actionName,
+                    template: '/' + ctrlAttr.Template.Trim('/') + "/" + actionAttr.Template.Trim('/'),
+                    defaults: new
+                    {
+                        controller = controllerName,
+                        action = actionName
+                    }
+                );
+
             }
         }
 
         private void ValidateRouteAttributeExistance(IEnumerable<MethodInfo> actions)
         {
-            foreach (var action in actions)
-            {
-                if (action.DeclaringType.GetCustomAttribute<ControllerRouteAttribute>() == null)
-                    throw new RoutingException(string.Format("Action '{0}' contains route attribute, but controller '{1}' does not.", action.Name, action.DeclaringType.Name));
-            }
+            var action =
+                actions.FirstOrDefault(a => a.DeclaringType.GetCustomAttribute<ControllerRouteAttribute>() == null);
+            if (action != null)
+                throw new RoutingException(string.Format("Action '{0}' contains route attribute, but controller '{1}' does not.", action.Name, action.DeclaringType.Name));
         }
 
         private IEnumerable<MethodInfo> GetActionsWithRouteAttribute(Assembly assembly)
@@ -64,5 +60,5 @@ namespace Resttp
         #endregion
     }
 
-   
+
 }
