@@ -1,4 +1,5 @@
 ﻿using Resttp.Common;
+using Resttp.Routing;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,11 +8,11 @@ using System.Reflection;
 
 namespace Resttp
 {
-    public class HttpRouteList : IEnumerable<HttpRoute>
+    public class HttpRouteList : IEnumerable<IHttpRoute>
     {
         private Assembly EntryAssembly { get { return Assembly.GetEntryAssembly(); } }
 
-        private readonly IList<HttpRoute> _routes;
+        private readonly IList<IHttpRoute> _routes;
 
         //For testing only
 
@@ -19,14 +20,14 @@ namespace Resttp
 
         public HttpRouteList()
         {
-            _routes = new List<HttpRoute>();
+            _routes = new List<IHttpRoute>();
             httpMethods = new[]
             {
                 "Get", "Post", "Put", "Delete", "Patch", "Head", "Options"
             };
         }
 
-        public HttpRoute GetRoute(string controller, string action)
+        public IHttpRoute GetRoute(string controller, string action)
         {
             return _routes.FirstOrDefault(r => r.ControllerName == controller && r.ActionName == action);
         }
@@ -88,7 +89,7 @@ namespace Resttp
 
         }
 
-        private void AddRoute(HttpRoute route)
+        private void AddRoute(IHttpRoute route)
         {
             var oldRoute = _routes.FirstOrDefault(r => r.ActionName == route.ActionName && r.ControllerName == route.ControllerName);
             if (oldRoute == null)
@@ -149,7 +150,7 @@ namespace Resttp
         }
 
         #region IEnumerable
-        public IEnumerator<HttpRoute> GetEnumerator()
+        public IEnumerator<IHttpRoute> GetEnumerator()
         {
             return _routes.GetEnumerator();
         }

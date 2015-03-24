@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 namespace Resttp
 {
     using Microsoft.Owin;
+    using Resttp.Routing;
     using System.IO;
     using AppFunc = Func<IDictionary<string, object>, Task>;
 
