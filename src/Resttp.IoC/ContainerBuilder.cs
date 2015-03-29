@@ -4,9 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Resttp.Dependencies
+namespace Resttp.IoC
 {
-    public class Class1
+    public class ContainerBuilder
     {
+        
+
+
+
     }
 }

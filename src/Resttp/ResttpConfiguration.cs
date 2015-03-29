@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
 using System.Collections;
+using Resttp.Dependencies;
 
 namespace Resttp
 {
@@ -62,5 +63,12 @@ namespace Resttp
         }
 
         #endregion
+
+        #region Dependency injection
+
+        public IDependencyResolver DependencyResolver { get; set; }
+
+        #endregion
+
     }
 }
