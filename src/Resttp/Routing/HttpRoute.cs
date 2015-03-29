@@ -1,33 +1,17 @@
-﻿using System;
+using Resttp.Routing;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Resttp
 {
-    public class HttpRoute
+    public class HttpRoute : IHttpRoute
     {
         public string Id { get; set; }
 
         public string Template { get; set; }
-
-        public string ResolvedTemplate
-        {
-            get
-            {
-                var template = Template;
-                return template;
-            }
-        }
-
-        public string ResolvedPath
-        {
-            get
-            {
-                var path = Template.Split('?')[0];
-                var propRegex = new Regex(@"\/*{\w+}\/*");
-
-                return path;
-            }
-        }
 
         public string ControllerName { get; set; }
 
@@ -59,16 +43,5 @@ namespace Resttp
             ActionName = actionName;
             HttpMethodName = httpMethodName;
         }
-
-        public bool Matches(string path)
-        {
-            var regex = new Regex(@"/*{\w+}");
-            var templateRegex = regex.Replace(Template, @"(/*[A-Za-z0-9]+)");
-
-
-
-            throw new NotImplementedException();
-        }
-
     }
 }

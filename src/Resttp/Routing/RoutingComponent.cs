@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Owin;
-
+using Resttp.Routing;
+	
 namespace Resttp
 {
     using AppFunc = Func<IDictionary<string, object>, Task>;
