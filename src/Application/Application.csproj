@@ -71,6 +71,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Resttp.IoC\Resttp.IoC.csproj">
+      <Project>{c940ea9e-a0ae-4e01-942a-f77b2c652616}</Project>
+      <Name>Resttp.IoC</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Resttp\Resttp.csproj">
       <Project>{1882a030-5bf5-414d-b39b-192cf7569944}</Project>
       <Name>Resttp</Name>
