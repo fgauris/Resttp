@@ -40,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Container.cs" />
-    <Compile Include="ContainerBuilder.cs" />
+    <Compile Include="IoCContainerBuilder.cs" />
     <Compile Include="Registration\Component.cs" />
     <Compile Include="IoCContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

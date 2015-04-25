@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Resttp.IoC.Registration
 {
-    public class ComponentRegistration
+    public class ComponentRegistration: IDisposable
+        
     {
-        public Type LookupType { get; set; }
+        public List<Type> LookupTypes { get; set; }
 
         public Type CreateType { get; set; }
 
@@ -16,19 +18,32 @@ namespace Resttp.IoC.Registration
 
         public IList<Parameter> Parameters { get; set; }
 
+        public Expression<Func<Object>> ResultFunc { get; set; }
+
+        public ComponentRegistration()
+        {
+            LookupTypes = new List<Type>();
+            Parameters = new List<Parameter>();
+        }
+
         public ComponentRegistration(Type createType)
+            : this()
         {
             CreateType = createType;
-            Parameters = new List<Parameter>();
         }
 
-        public ComponentRegistration(Type lookUpType, Type createType)
+        public ComponentRegistration(Type createType, Type lookUpType)
+            : this()
         {
-            LookupType = lookUpType;
             CreateType = createType;
-            Parameters = new List<Parameter>();
+            LookupTypes.Add(lookUpType);
         }
 
 
+        public void Dispose()
+        {
+            LookupTypes.Clear();
+            Parameters.Clear();
+        }
     }
 }

@@ -1,14 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Resttp.IoC.Registration
 {
-    public class Component
+    public class Component : IDisposable
     {
         public ComponentRegistration ComponentRegistration { get; private set; }
+
+        public Component(Type createType, Expression<Func<object>> @delegate)
+        {
+            ComponentRegistration = new ComponentRegistration(createType) 
+            {
+                ResultFunc = @delegate 
+            };
+        }
 
         public Component(Type createType)
         {
@@ -17,43 +27,60 @@ namespace Resttp.IoC.Registration
 
         public Component(Type createType, Type lookUpType)
         {
-            ComponentRegistration = new ComponentRegistration(lookUpType, createType);
+            ComponentRegistration = new ComponentRegistration(createType, lookUpType);
         }
 
         public Component ForSelf()
         {
-            ComponentRegistration.LookupType = ComponentRegistration.CreateType;
+            ComponentRegistration.LookupTypes.Add(ComponentRegistration.CreateType);
             return this;
         }
 
         public Component For<T>()
         {
-            throw new NotImplementedException();
+            ComponentRegistration.LookupTypes.Add(typeof(T));
+            return this;
         }
 
         public Component ForImplementedInterfaces()
         {
-            throw new NotImplementedException();
+            foreach (var @interface in ComponentRegistration.CreateType.GetInterfaces())
+            {
+                ComponentRegistration.LookupTypes.Add(@interface);
+            }
+            return this;
         }
 
-        public Component WithParameters(object o)
+        public Component WithParameters(params Parameter[] parameters)
         {
-            throw new NotImplementedException();
+            foreach (var p in parameters)
+            {
+                ComponentRegistration.Parameters.Add(p);
+            }
+            return this;
         }
 
         public Component SetSingleton()
         {
-            throw new NotImplementedException();
+            ComponentRegistration.Mode = "Singleton";
+            return this;
         }
 
         public Component SetPerRequest()
         {
-            throw new NotImplementedException();
+            ComponentRegistration.Mode = "Request";
+            return this;
         }
 
         public Component SetPerDependency()
         {
-            throw new NotImplementedException();
+            ComponentRegistration.Mode = "Dependency";
+            return this;
+        }
+
+        public void Dispose()
+        {
+            ComponentRegistration.Dispose();
         }
     }
 }

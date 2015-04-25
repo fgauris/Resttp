@@ -7,6 +7,7 @@ using Owin;
 using Resttp;
 using Resttp.Dependencies;
 using Resttp.IoC;
+using Resttp.IoC.Registration;
 
 [assembly: OwinStartup(typeof(Startup))]
 public class Startup
@@ -44,20 +45,20 @@ public class Startup
 
     public IDependencyResolver GetResolver()
     {
-        var container = new IoCContainer();
+        var container = new IoCContainerBuilder();
 
         //Add<T>(Func<T> @delegate)
-        container.Add<Object>(() => new object());
+        container.AddInstance(() => 3).For<int>();
 
         //container.AddType<TypeToCreate>().For<TypeToLookup>().Set...
-        container.AddType<Object>().ForSelf().SetSingleton();
+        container.AddType<Object>().ForSelf().WithParameters(new Parameter("Labas", "labas")).SetSingleton();
         container.AddType<Object>().For<IList>().SetPerDependency();
         container.AddType<Object>().ForImplementedInterfaces().SetPerRequest();
 
-        container.AddInstance(new Object()).ForSelf().SetSingleton();
-        container.AddInstance(new object()).For<Object>().SetPerRequest();
-        container.AddInstance(new object()).ForImplementedInterfaces().SetPerDependency();
-        container.AddInstance(new object()).For<Object>().WithParameters(new { par = "parValue" });
+        container.AddInstance(() => new Object()).ForSelf().SetSingleton();
+        container.AddInstance(() => new object()).For<Object>().SetPerRequest();
+        container.AddInstance(() => new object()).ForImplementedInterfaces().SetPerDependency();
+        container.AddInstance(() => new object()).For<Object>();
         return container.Build();
     }
 

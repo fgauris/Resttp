@@ -5,13 +5,12 @@ namespace Resttp.IoC.Registration
 {
     public class Parameter
     {
-        public Type ArgType { get; private set; }
-        public string Name { get; private set; }
-        public ConstantExpression Value { get; private set; }
+        public string Name { get; set; }
 
-        public Parameter(Type type, string name, ConstantExpression value)
+        public object Value { get; set; }
+
+        public Parameter(string name, object value)
         {
-            ArgType = type;
             Name = name;
             Value = value;
         }
