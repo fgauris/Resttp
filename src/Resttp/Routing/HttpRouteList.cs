@@ -22,7 +22,7 @@ namespace Resttp
 
         public HttpRouteList()
         {
-            _routes = new List<HttpRoute>();
+            _routes = new List<IHttpRoute>();
             _httpMethods = new[]
             {
                 "Get", "Post", "Put", "Delete", "Patch", "Head", "Options"
