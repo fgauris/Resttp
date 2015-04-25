@@ -8,7 +8,7 @@ using Resttp.IoC.Registration;
 
 namespace Resttp.IoC
 {
-    public class IoCContainer : IDependencyResolver
+    public class IoCContainer : IScopedDependencyResolver
     {
         
 
@@ -18,6 +18,11 @@ namespace Resttp.IoC
         }
 
         public object Resolve(Type type)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IDependencyResolver StartScope()
         {
             throw new NotImplementedException();
         }

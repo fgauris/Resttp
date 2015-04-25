@@ -63,7 +63,7 @@ namespace Resttp
 
         #region Dependency injection
 
-        public IDependencyResolver DependencyResolver { get; set; }
+        public IScopedDependencyResolver DependencyResolver { get; set; }
 
         #endregion
 

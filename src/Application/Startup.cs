@@ -43,7 +43,7 @@ public class Startup
         
     }
 
-    public IDependencyResolver GetResolver()
+    public IScopedDependencyResolver GetResolver()
     {
         var container = new IoCContainerBuilder();
 

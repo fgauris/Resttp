@@ -1,5 +1,6 @@
 ﻿using System;
 using Owin;
+using Resttp.ControlerCreator;
 
 namespace Resttp
 {
@@ -18,6 +19,7 @@ namespace Resttp
             }
 
             app.Use<RoutingComponent>(new HttpRouteResolver(config.HttpRoutes));
+            //app.Use<ControlerCreatorComponent>(config.DependencyResolver);
             app.Use<ResttpComponent>(config);
             
         }

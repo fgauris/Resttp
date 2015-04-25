@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Resttp.IoC.Registration
 {
-    public class Component : IDisposable
+    public class Component
     {
         public ComponentRegistration ComponentRegistration { get; private set; }
 
@@ -78,9 +78,5 @@ namespace Resttp.IoC.Registration
             return this;
         }
 
-        public void Dispose()
-        {
-            ComponentRegistration.Dispose();
-        }
     }
 }

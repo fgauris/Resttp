@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Resttp.IoC
 {
-    public class IoCContainerBuilder : IDisposable
+    public class IoCContainerBuilder
     {
         private IList<Component> Components { get; set; }
 
@@ -42,15 +42,12 @@ namespace Resttp.IoC
 
         #endregion
 
-        public IDependencyResolver Build()
+        public IScopedDependencyResolver Build()
         {
+            var container = new IoCContainer();
+
+
             throw new NotImplementedException();
-        }
-
-
-        public void Dispose()
-        {
-            Components.Clear();
         }
     }
 }
