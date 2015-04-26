@@ -44,7 +44,7 @@ namespace Resttp.IoC
             ComponentRegistrations.Clear();
         }
 
-        
+
         public T Resolve<T>()
         {
             return (T)Resolve(typeof(T));
@@ -71,17 +71,24 @@ namespace Resttp.IoC
                 }
                 else//create new
                 {
-                    var constructors = type.GetConstructors().OrderByDescending(c => c.GetParameters().Count());
-                    foreach (var constructor in constructors)
+                    if (reg.ResultFunc != null)
                     {
-                        var parameters = constructor.GetParameters();
-                        if (!parameters.Any())
+                        result = reg.ResultFunc();
+                    }
+                    else
+                    {
+                        var constructors = type.GetConstructors()
+                            .Where(c => c.GetParameters().Count() > 0)
+                            .OrderByDescending(c => c.GetParameters().Count());
+
+                        if (!constructors.Any())
                         {
-                            return Activator.CreateInstance(reg.CreateType);
+                            result = Activator.CreateInstance(reg.CreateType);
                         }
-                        else
+                        foreach (var constructor in constructors)
                         {
-                            return constructor.Invoke(reg, ResolveParameters(reg, parameters).ToArray());
+                            var parameters = constructor.GetParameters();
+                            result = constructor.Invoke(ResolveParameters(reg, parameters).ToArray());
                         }
                     }
 
@@ -100,14 +107,14 @@ namespace Resttp.IoC
             foreach (var parameter in parameters)
             {
                 var defaultParam = registration.Parameters.FirstOrDefault(dp => dp.Name == parameter.Name);
-                if(defaultParam != null)
+                if (defaultParam != null)
                     yield return defaultParam.Value;
                 else
                 {
                     var newParam = Resolve(parameter.ParameterType);
                     if (newParam == null)
                         throw new Exception(string.Format("Parameter not found. Name: {0}, Type: {1}", parameter.Name, parameter.ParameterType.FullName));
-                    else 
+                    else
                         yield return newParam;
                 }
             }

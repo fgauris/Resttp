@@ -31,13 +31,13 @@ namespace Resttp.IoC
 
         public Component AddInstance<T>(Expression<Func<T>> creator)
         {
-            var component = new Component(typeof(T));
+            var component = new Component(null, typeof(T));
 
             var convertedCreator = Expression.Lambda<Func<object>>(
                     Expression.Convert(creator.Body, typeof(object)), creator.Parameters
                 );
 
-            component.ComponentRegistration.ResultFunc = convertedCreator;
+            component.ComponentRegistration.ResultFunc = convertedCreator.Compile();
             Components.Add(component);
             return component;
         }
@@ -49,26 +49,5 @@ namespace Resttp.IoC
             var container = new IoCContainer(null, Components.Select(c => c.ComponentRegistration).ToList());
             return container;
         }
-
-        //public IDictionary<Type, object> GenerateSingletons()
-        //{
-        //    var registrations = Components
-        //        .Select(c => c.ComponentRegistration)
-        //        .Where(r => r.Mode == "Singleton");
-
-        //    var result = new Dictionary<Type, Object>();
-
-        //    foreach (var registration in registrations)
-        //    {
-        //        foreach (var lookUp in registration.LookupTypes)
-        //        {
-        //            result.Add(lookUp, registration.CreateObject(lookUp));
-        //        }
-        //    }
-
-        //}
-
-
-
     }
 }

@@ -18,10 +18,11 @@ namespace Resttp.IoC.Registration
 
         public IList<Parameter> Parameters { get; set; }
 
-        public Expression<Func<Object>> ResultFunc { get; set; }
+        public Func<object> ResultFunc { get; set; }
 
         public ComponentRegistration()
         {
+            Level = 1;
             LookupTypes = new List<Type>();
             Parameters = new List<Parameter>();
         }
@@ -45,34 +46,6 @@ namespace Resttp.IoC.Registration
             LookupTypes.Clear();
             Parameters.Clear();
         }
-
-        //public object CreateObject(Type lookupType)
-        //{
-        //    if (LookupTypes.All(t => t.FullName != lookupType.FullName))//Check this 
-        //        return null;
-
-        //    if (ResultFunc != null)
-        //    {
-        //        return ResultFunc.Compile()();
-        //    }
-        //    else
-        //    {
-
-        //    }
-        //}
-
-        //protected object CreateFromMetaData(Type lookupType)
-        //{
-        //    ConstructorInfo[] contructors = CreateType.GetConstructors().OrderByDescending(c => c.GetParameters().Count()).ToArray();
-        //    foreach (var constructor in contructors)
-        //    {
-        //        var parameters = constructor.GetParameters();
-        //        if(!parameters.Any())
-        //        {
-                    
-        //        }
-        //    }
-        //}
 
     }
 }

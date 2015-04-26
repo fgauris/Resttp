@@ -12,11 +12,11 @@ namespace Resttp.IoC.Registration
     {
         public ComponentRegistration ComponentRegistration { get; private set; }
 
-        public Component(Type createType, Expression<Func<object>> @delegate)
+        public Component(Type createType, Expression<Func<object>> resultExp)
         {
             ComponentRegistration = new ComponentRegistration(createType) 
             {
-                ResultFunc = @delegate 
+                ResultFunc = resultExp.Compile()
             };
         }
 
