@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Resttp.Dependencies;
 using Resttp.IoC.Registration;
 using System.Reflection;
+using Resttp.IoC.Exceptions;
 
 namespace Resttp.IoC
 {
@@ -55,12 +56,12 @@ namespace Resttp.IoC
             object result = null;
             var reg = ComponentRegistrations.FirstOrDefault(r => r.LookupTypes.Contains(type));
             if (reg == null)
-                throw new Exception("Type not found in IoC container. Type: " + type.FullName);//TODO Change to return null;
+                throw new IoCException("Type not found in IoC container. Type: " + type.FullName);
 
             if (reg.Level < _level)//Get from parent
             {
                 if (ParentContainer == null)
-                    throw new Exception(string.Format("Bad level. Current: {0}. Required: {1}.", _level, reg.Level));//TODO Change to return null;
+                    throw new IoCException(string.Format("Bad level. Current: {0}. Required: {1}.", _level, reg.Level));
                 result = ParentContainer.Resolve(type);
             }
             else//From this
@@ -97,7 +98,6 @@ namespace Resttp.IoC
                         Objects.Add(type, result);
                 }
             }
-
             return result;
         }
 
@@ -111,11 +111,7 @@ namespace Resttp.IoC
                     yield return defaultParam.Value;
                 else
                 {
-                    var newParam = Resolve(parameter.ParameterType);
-                    if (newParam == null)
-                        throw new Exception(string.Format("Parameter not found. Name: {0}, Type: {1}", parameter.Name, parameter.ParameterType.FullName));
-                    else
-                        yield return newParam;
+                    yield return Resolve(parameter.ParameterType);
                 }
             }
         }

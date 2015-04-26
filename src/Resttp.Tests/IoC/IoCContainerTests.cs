@@ -9,7 +9,7 @@ namespace Resttp.Tests.IoC
     public class IoCContainerTests
     {
         [TestMethod]
-        public void Should_ResolveAddInstance()
+        public void Should_ResolveAddInstance1()
         {
             var builder = new IoCContainerBuilder();
             builder.AddInstance<IA1>(() => new A()).SetSingleton();
@@ -19,6 +19,16 @@ namespace Resttp.Tests.IoC
             Assert.IsNotNull(ia1);
             Assert.IsNotNull(ia2);
             Assert.AreSame(ia1, ia2);
+        }
+
+        [TestMethod]
+        public void Should_ResolveAddInstance2()
+        {
+            var builder = new IoCContainerBuilder();
+            builder.AddInstance(() => new A()).SetSingleton();
+            var container = builder.Build();
+            var a = container.Resolve<A>();
+            Assert.IsNotNull(a);
         }
 
         [TestMethod]
@@ -70,7 +80,21 @@ namespace Resttp.Tests.IoC
             var a = container.Resolve<AParam>();
             Assert.IsNotNull(a);
             Assert.AreEqual(a.Sk, 5);
+        }
 
+
+
+        [TestMethod]
+        public void Should_ResolveImplementedInterfaces()
+        {
+            var builder = new IoCContainerBuilder();
+            builder.AddType<A>().ForImplementedInterfaces().SetSingleton();
+            var container = builder.Build();
+            var ia1 = container.Resolve<IA1>();
+            var ia2 = container.Resolve<IA2>();
+            Assert.IsNotNull(ia1);
+            Assert.IsNotNull(ia2);
+            Assert.AreNotSame(ia1, ia2);
         }
     }
 

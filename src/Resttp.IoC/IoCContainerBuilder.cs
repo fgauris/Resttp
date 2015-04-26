@@ -29,15 +29,11 @@ namespace Resttp.IoC
             return component;
         }
 
-        public Component AddInstance<T>(Expression<Func<T>> creator)
+        public Component AddInstance<T>(Func<T> creator)
         {
             var component = new Component(null, typeof(T));
-
-            var convertedCreator = Expression.Lambda<Func<object>>(
-                    Expression.Convert(creator.Body, typeof(object)), creator.Parameters
-                );
-
-            component.ComponentRegistration.ResultFunc = convertedCreator.Compile();
+            Func<object> convertedCreator = () => creator();
+            component.ComponentRegistration.ResultFunc = convertedCreator;
             Components.Add(component);
             return component;
         }

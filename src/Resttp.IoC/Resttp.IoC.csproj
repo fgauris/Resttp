@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\IoCException.cs" />
     <Compile Include="IoCContainerBuilder.cs" />
     <Compile Include="Registration\Component.cs" />
     <Compile Include="IoCContainer.cs" />
@@ -52,9 +53,7 @@
       <Name>Resttp.Dependencies</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Exceptions\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
