@@ -96,6 +96,26 @@ namespace Resttp.Tests.IoC
             Assert.IsNotNull(ia2);
             Assert.AreNotSame(ia1, ia2);
         }
+
+        [TestMethod]
+        public void Should_ResolveNestedDependencies()
+        {
+            var builder = new IoCContainerBuilder();
+            builder.AddType<A>().ForSelf().SetSingleton();
+            builder.AddType<ANested>().ForSelf().SetSingleton();
+            var container = builder.Build();
+            var aNested = container.Resolve<ANested>();
+            Assert.IsNotNull(aNested);
+        }
+    }
+
+    public class ANested
+    {
+        public A AProp { get; set; }
+        public ANested(A a)
+        {
+            AProp = a;
+        }
     }
 
 

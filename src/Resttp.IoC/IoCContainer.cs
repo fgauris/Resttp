@@ -73,24 +73,18 @@ namespace Resttp.IoC
                 else//create new
                 {
                     if (reg.ResultFunc != null)
-                    {
                         result = reg.ResultFunc();
-                    }
                     else
                     {
-                        var constructors = type.GetConstructors()
+                        var constructor = type.GetConstructors()
                             .Where(c => c.GetParameters().Count() > 0)
-                            .OrderByDescending(c => c.GetParameters().Count());
+                            .OrderByDescending(c => c.GetParameters().Count())
+                            .FirstOrDefault();
 
-                        if (!constructors.Any())
-                        {
+                        if (constructor == null)
                             result = Activator.CreateInstance(reg.CreateType);
-                        }
-                        foreach (var constructor in constructors)
-                        {
-                            var parameters = constructor.GetParameters();
-                            result = constructor.Invoke(ResolveParameters(reg, parameters).ToArray());
-                        }
+                        else
+                            result = constructor.Invoke(ResolveParameters(reg, constructor.GetParameters()).ToArray());
                     }
 
                     //Add to cache
@@ -110,9 +104,7 @@ namespace Resttp.IoC
                 if (defaultParam != null)
                     yield return defaultParam.Value;
                 else
-                {
                     yield return Resolve(parameter.ParameterType);
-                }
             }
         }
 
