@@ -39,7 +39,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Container.cs" />
     <Compile Include="IoCContainerBuilder.cs" />
     <Compile Include="Registration\Component.cs" />
     <Compile Include="IoCContainer.cs" />

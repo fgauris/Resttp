@@ -62,19 +62,19 @@ namespace Resttp.IoC.Registration
 
         public Component SetSingleton()
         {
-            ComponentRegistration.Mode = "Singleton";
+            ComponentRegistration.Level = 1;
             return this;
         }
 
         public Component SetPerRequest()
         {
-            ComponentRegistration.Mode = "Request";
+            ComponentRegistration.Level = 2;
             return this;
         }
 
         public Component SetPerDependency()
         {
-            ComponentRegistration.Mode = "Dependency";
+            ComponentRegistration.Level = 3;
             return this;
         }
 

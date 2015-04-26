@@ -1,13 +1,13 @@
-﻿
-using System;
+﻿using System;
 using System.Collections;
-using System.Runtime.InteropServices;
 using Microsoft.Owin;
 using Owin;
 using Resttp;
+using Resttp.Extensions;
 using Resttp.Dependencies;
 using Resttp.IoC;
 using Resttp.IoC.Registration;
+using System.Reflection;
 
 [assembly: OwinStartup(typeof(Startup))]
 public class Startup
@@ -45,21 +45,20 @@ public class Startup
 
     public IScopedDependencyResolver GetResolver()
     {
-        var container = new IoCContainerBuilder();
+        var builder = new IoCContainerBuilder();
 
-        //Add<T>(Func<T> @delegate)
-        container.AddInstance(() => 3).For<int>();
+        builder.AddResttpControllers(Assembly.GetExecutingAssembly());
 
-        //container.AddType<TypeToCreate>().For<TypeToLookup>().Set...
-        container.AddType<Object>().ForSelf().WithParameters(new Parameter("Labas", "labas")).SetSingleton();
-        container.AddType<Object>().For<IList>().SetPerDependency();
-        container.AddType<Object>().ForImplementedInterfaces().SetPerRequest();
+        builder.AddInstance(() => 3).For<int>();
 
-        container.AddInstance(() => new Object()).ForSelf().SetSingleton();
-        container.AddInstance(() => new object()).For<Object>().SetPerRequest();
-        container.AddInstance(() => new object()).ForImplementedInterfaces().SetPerDependency();
-        container.AddInstance(() => new object()).For<Object>();
-        return container.Build();
+        builder.AddType<Object>().ForSelf().WithParameters(new Parameter("Labas", "labas")).SetSingleton();
+        builder.AddType<Object>().For<IList>().SetPerDependency();
+        builder.AddType<Object>().ForImplementedInterfaces().SetPerRequest();
+
+        builder.AddInstance(() => new Object()).ForSelf().SetSingleton();
+        builder.AddInstance(() => new object()).For<Object>().SetPerRequest();
+        builder.AddInstance(() => new object()).ForImplementedInterfaces().SetPerDependency();
+        return builder.Build();
     }
 
 
