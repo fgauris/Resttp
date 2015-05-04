@@ -26,17 +26,18 @@ namespace Resttp.IoC
             Objects = new Dictionary<Type, object>();
         }
 
-        public IoCContainer CreateChildContainer(IDictionary<Type, Object> objects)
+        public IoCContainer CreateChildContainer()//IDictionary<Type, Object> objects)
         {
             return new IoCContainer(this, ComponentRegistrations)
-            {
-                Objects = objects.ToDictionary(e => e.Key, e => e.Value)
-            };
+                //{
+                //    Objects = objects.ToDictionary(e => e.Key, e => e.Value)
+                //}
+            ;
         }
 
         public IDependencyResolver StartScope()
         {
-            return CreateChildContainer(Objects);
+            return CreateChildContainer();//Objects);
         }
 
         public void Dispose()
@@ -77,9 +78,9 @@ namespace Resttp.IoC
                     else
                     {
                         var constructor = type.GetConstructors()
-                            .Where(c => c.GetParameters().Count() > 0)
-                            .OrderByDescending(c => c.GetParameters().Count())
-                            .FirstOrDefault();
+                                .Where(c => c.GetParameters().Count() > 0)
+                                .OrderByDescending(c => c.GetParameters().Count())
+                                .SingleOrDefault();
 
                         if (constructor == null)
                             result = Activator.CreateInstance(reg.CreateType);

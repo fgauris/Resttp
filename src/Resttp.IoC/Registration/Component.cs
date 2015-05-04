@@ -74,7 +74,7 @@ namespace Resttp.IoC.Registration
 
         public Component SetPerDependency()
         {
-            ComponentRegistration.Level = 3;
+            ComponentRegistration.Level = -1;
             return this;
         }
 
