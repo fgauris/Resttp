@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Resttp.Dependencies;
 
-namespace Resttp.ControlerCreator
+namespace Resttp.ControllerCreator
 {
     using AppFunc = Func<IDictionary<string, object>, Task>;
     using Resttp.Routing;

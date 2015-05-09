@@ -1,6 +1,6 @@
 ﻿using System;
 using Owin;
-using Resttp.ControlerCreator;
+using Resttp.ControllerCreator;
 
 namespace Resttp
 {
