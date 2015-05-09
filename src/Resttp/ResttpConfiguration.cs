@@ -8,11 +8,14 @@ namespace Resttp
 {
     public class ResttpConfiguration
     {
+        public Assembly ControllersAssembly { get; set; }
+
         public HttpRouteList HttpRoutes { get; private set; }
 
-        public ResttpConfiguration()
+        public ResttpConfiguration(Assembly controllersAssembly)
         {
             HttpRoutes = new HttpRouteList();
+            ControllersAssembly = controllersAssembly;
         }
 
         #region Routing
@@ -66,6 +69,7 @@ namespace Resttp
         public IScopedDependencyResolver DependencyResolver { get; set; }
 
         #endregion
+
 
     }
 }

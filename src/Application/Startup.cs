@@ -8,17 +8,15 @@ using Resttp.Dependencies;
 using Resttp.IoC;
 using Resttp.IoC.Registration;
 using System.Reflection;
+using Application.Controllers;
 
 [assembly: OwinStartup(typeof(Startup))]
 public class Startup
 {
     public void Configuration(IAppBuilder app)
     {
-        var config = new ResttpConfiguration();
+        var config = new ResttpConfiguration(typeof(HomeController).Assembly);
         config.MapHttpRoutesFromAttributes();
-        
-
-     
         config.HttpRoutes.AddRoutes
             (
             "Home",

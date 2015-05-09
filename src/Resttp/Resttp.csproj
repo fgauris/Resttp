@@ -56,6 +56,8 @@
     <Compile Include="ControlerCreator\ControlerCreatorComponent.cs" />
     <Compile Include="Extensions\IoCContainerBuilderExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestContext.cs" />
+    <Compile Include="ResponseContext.cs" />
     <Compile Include="RestController.cs" />
     <Compile Include="ResttpComponent.cs" />
     <Compile Include="ResttpAppBuilderExtensions.cs" />

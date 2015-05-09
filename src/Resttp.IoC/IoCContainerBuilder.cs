@@ -31,7 +31,7 @@ namespace Resttp.IoC
 
         public Component AddInstance<T>(Func<T> creator)
         {
-            var component = new Component(null, typeof(T));
+            var component = new Component(typeof(T));
             Func<object> convertedCreator = () => creator();
             component.ComponentRegistration.ResultFunc = convertedCreator;
             Components.Add(component);

@@ -8,6 +8,6 @@ namespace Resttp.Dependencies
     public interface IDependencyResolver: IDisposable
     {
         T Resolve<T>();
-        //object Resolve(Type type);
+        object Resolve(Type type);
     }
 }
