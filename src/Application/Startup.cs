@@ -53,9 +53,9 @@ public class Startup
         builder.AddType<Object>().For<IList>().SetPerDependency();
         builder.AddType<Object>().ForImplementedInterfaces().SetPerRequest();
 
-        builder.AddInstance(() => new Object()).ForSelf().SetSingleton();
-        builder.AddInstance(() => new object()).For<Object>().SetPerRequest();
-        builder.AddInstance(() => new object()).ForImplementedInterfaces().SetPerDependency();
+        builder.AddInstance(() => new Object()).SetSingleton();
+        builder.AddInstance(() => new object()).SetPerRequest();
+        builder.AddInstance(() => new object()).SetPerDependency();
         return builder.Build();
     }
 

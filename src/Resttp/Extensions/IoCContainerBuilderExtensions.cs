@@ -12,7 +12,7 @@ namespace Resttp.Extensions
             var controllerTypes = assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(RestController)));
             foreach (var controllerType in controllerTypes)
             {
-                builder.AddType(controllerType).ForSelf().SetPerDependency();
+                builder.AddType(controllerType).ForSelf().SetPerRequest();
             }
         }
     }
