@@ -6,12 +6,9 @@ namespace Resttp
 {
     public class RequestContext
     {
-        private string _action;
-
-        public RequestContext(IDictionary<string, object> owinEnvironment, string action)
+        public RequestContext(IDictionary<string, object> owinEnvironment)
         {
             OwinEnvironment = owinEnvironment;
-            _action = action;
         }
 
         public IDictionary<string, object> OwinEnvironment { get; set; }
@@ -53,6 +50,5 @@ namespace Resttp
         /// </summary>
         public string QueryString { get { return OwinEnvironment["owin.RequestQueryString"] as string; } }
 
-        public string Action { get { return _action; } }
     }
 }

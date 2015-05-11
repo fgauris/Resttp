@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionInvoker\ActionInvokerComponent.cs" />
     <Compile Include="Common\ControllerHelper.cs" />
     <Compile Include="ControllerCreator\ControlerCreatorComponent.cs" />
     <Compile Include="Extensions\IoCContainerBuilderExtensions.cs" />

@@ -1,16 +1,16 @@
-﻿using System;
+﻿using Resttp.Dependencies;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Resttp.Dependencies;
 
-namespace Resttp.ControllerCreator
+
+namespace Resttp
 {
-    using AppFunc = Func<IDictionary<string, object>, Task>;
     using Resttp.Routing;
-    using System.IO;
     using System.Reflection;
+    using AppFunc = Func<IDictionary<string, object>, Task>;
+
     public class ControlerCreatorComponent
     {
         private AppFunc _next;
@@ -26,10 +26,10 @@ namespace Resttp.ControllerCreator
             ControllersAssembly = controllersAssembly;
         }
 
-        public async Task Invoke(IDictionary<string, object> enviroment)
+        public async Task Invoke(IDictionary<string, object> environment)
         {
             //getting route 
-            var route = enviroment["resttp.Route"] as IHttpRoute;
+            var route = environment["resttp.Route"] as IHttpRoute;
             if (route == null)
                 throw new Exception("Route not found in OWIN environment dictionary");
 
@@ -37,12 +37,12 @@ namespace Resttp.ControllerCreator
             var scope = DependencyResolver.StartScope();
 
             //creating request controller
-            var controller = CreateController(enviroment, route, scope);
+            var controller = CreateController(environment, route, scope);
             if (controller == null)
                 throw new Exception("Failed to create a controller " + route.ControllerName);
-            enviroment.Add("resttp.Controller", controller);
+            environment.Add("resttp.Controller", controller);
 
-            await _next(enviroment);
+            await _next(environment);
 
             //Destroying request scope
             scope.Dispose();
@@ -52,8 +52,9 @@ namespace Resttp.ControllerCreator
         {
             var controller = resolver.Resolve(GetControllerType(route.ControllerName + "Controller")) as RestController;
             controller.OwinEnvironment = enviroment;
-            controller.Request = new RequestContext(enviroment, route.ActionName);
+            controller.Request = new RequestContext(enviroment);
             controller.Response = new ResponseContext(enviroment);
+            controller.Route = route;
             return controller;
         }
 

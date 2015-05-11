@@ -12,6 +12,8 @@ namespace Resttp
 
         public HttpRouteList HttpRoutes { get; private set; }
 
+        //public IList<MediaTypeFormatter> Formatters { get; set; }
+
         public ResttpConfiguration(Assembly controllersAssembly)
         {
             HttpRoutes = new HttpRouteList();
@@ -70,6 +72,9 @@ namespace Resttp
 
         #endregion
 
+        #region Formatters
 
+
+        #endregion
     }
 }
