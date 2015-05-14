@@ -43,7 +43,6 @@ namespace Resttp.IoC
         public void Dispose()
         {
             Objects.Clear();
-            ComponentRegistrations.Clear();
         }
 
 

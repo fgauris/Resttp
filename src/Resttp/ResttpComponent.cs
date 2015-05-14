@@ -36,7 +36,6 @@ namespace Resttp
             using (var writer = new StreamWriter(response))
             {
                 await writer.WriteAsync("Hello!");
-                return;
             }
         }
 

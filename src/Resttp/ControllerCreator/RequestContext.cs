@@ -39,7 +39,7 @@ namespace Resttp
             {
                 var uri = (string)OwinEnvironment["owin.RequestScheme"] + "://" + Headers["Host"].First() + (string)OwinEnvironment["owin.RequestPathBase"] + (string)OwinEnvironment["owin.RequestPath"];
 
-                if (OwinEnvironment["owin.RequestQueryString"] != "")
+                if ((string)OwinEnvironment["owin.RequestQueryString"] != "")
                     uri += "?" + (string)OwinEnvironment["owin.RequestQueryString"];
                 return uri;
             }

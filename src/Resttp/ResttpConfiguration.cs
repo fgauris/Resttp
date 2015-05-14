@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Collections;
 using Resttp.Dependencies;
+using System.Net.Http.Formatting;
 
 namespace Resttp
 {
@@ -12,12 +13,19 @@ namespace Resttp
 
         public HttpRouteList HttpRoutes { get; private set; }
 
+        public MediaTypeFormatterCollection Formatters { get; set; }
+
+        public Resttp.ContentNegotiation.IContentNegotiator ContentNegotiator { get; set; }
+
         //public IList<MediaTypeFormatter> Formatters { get; set; }
 
         public ResttpConfiguration(Assembly controllersAssembly)
         {
             HttpRoutes = new HttpRouteList();
             ControllersAssembly = controllersAssembly;
+            Formatters = new MediaTypeFormatterCollection();
+            //Formatters.Remove(Formatters.First(f=>f is FormUrlEncodedMediaTypeFormatter));
+            ContentNegotiator = new ContentNegotiation.ContentNegotiator();
         }
 
         #region Routing
@@ -72,9 +80,5 @@ namespace Resttp
 
         #endregion
 
-        #region Formatters
-
-
-        #endregion
     }
 }
