@@ -5,7 +5,7 @@ namespace Application.Controllers
     [ControllerRoute("Pirmas")]
     public class PirmasController : RestController
     {
-
+        [Http("Get")]
         public void Index()
         {
 

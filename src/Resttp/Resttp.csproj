@@ -59,7 +59,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionInvoker\ActionArgumentDescriptor.cs" />
+    <Compile Include="ActionInvoker\ActionDescriptor.cs" />
+    <Compile Include="ActionInvoker\ActionDescriptorGenerator.cs" />
     <Compile Include="ActionInvoker\ActionInvokerComponent.cs" />
+    <Compile Include="ActionInvoker\ActionParameterBinder.cs" />
     <Compile Include="Common\ControllerHelper.cs" />
     <Compile Include="ControllerCreator\ControlerCreatorComponent.cs" />
     <Compile Include="Extensions\IoCContainerBuilderExtensions.cs" />

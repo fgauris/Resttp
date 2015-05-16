@@ -47,12 +47,31 @@ namespace Resttp.ContentNegotiation
 
             var headers = owinEnvironment["owin.RequestHeaders"] as IDictionary<string, string[]>;
 
+            var formatter = GetContentTypeFormatter(type, headers, formatters);
+            if (formatter != null)
+                return formatter;
+
             if (jsonFormatter.CanWriteType(type) && AcceptsJson(jsonFormatter as JsonMediaTypeFormatter, headers))
                 return new ContentNegotiatorResult(jsonFormatter, JsonMimeType);
             if (xmlFormatter.CanWriteType(type) && AcceptsXml(xmlFormatter as XmlMediaTypeFormatter, headers))
                 return new ContentNegotiatorResult(xmlFormatter, XmlMimeTypes.First());
             return null;
         }
+
+        private ContentNegotiatorResult GetContentTypeFormatter(Type type, IDictionary<string, string[]> headers, IEnumerable<MediaTypeFormatter> formatters)
+        {
+            ContentNegotiatorResult result = null;
+            var contentTypeHeader = headers.Where(h => string.Equals(h.Key, "content-type", StringComparison.OrdinalIgnoreCase));
+            var jsonFormatter = formatters.FirstOrDefault(f => f is JsonMediaTypeFormatter);
+            var xmlFormatter = formatters.FirstOrDefault(f => f is XmlMediaTypeFormatter);
+
+            if (contentTypeHeader.Any() && contentTypeHeader.First().Value.Any(v => v.Equals(JsonMimeType, StringComparison.OrdinalIgnoreCase)) && jsonFormatter != null)//Has json content-type
+                result = new ContentNegotiatorResult(jsonFormatter, JsonMimeType);
+            else if (contentTypeHeader.Any() && contentTypeHeader.First().Value.Any(v => XmlMimeTypes.FirstOrDefault(xml => v.Equals(xml, StringComparison.OrdinalIgnoreCase)) != null))//Has xml content-type
+                result = new ContentNegotiatorResult(xmlFormatter, XmlMimeTypes.First());
+            return result;
+        }
+
 
         /// <summary>
         /// Checks if request accepts json as response type
@@ -64,12 +83,7 @@ namespace Resttp.ContentNegotiation
         {
             if (jsonFormatter == null)
                 return false;
-            var contentTypeHeader = headers.Where(h => string.Equals(h.Key, "content-type", StringComparison.OrdinalIgnoreCase));
-
-            //Has json content-type
-            if (contentTypeHeader.Any() && contentTypeHeader.First().Value.Any(v => v.Equals(JsonMimeType, StringComparison.OrdinalIgnoreCase)))
-                return true;
-
+            
             //Accepts 'application/json'
             if (HasAcceptHeader(headers, JsonMimeType))
                 return true;
@@ -87,12 +101,6 @@ namespace Resttp.ContentNegotiation
         {
             if (xmlFormatter == null)
                 return false;
-
-            var contentTypeHeader = headers.Where(h => string.Equals(h.Key, "content-type", StringComparison.OrdinalIgnoreCase));
-
-            //Has xml content-type: 
-            if (contentTypeHeader.Any() && contentTypeHeader.First().Value.Any(v => XmlMimeTypes.FirstOrDefault(xml => v.Equals(xml, StringComparison.OrdinalIgnoreCase)) != null))
-                return true;
 
             if (XmlMimeTypes.Any(xml => HasAcceptHeader(headers, xml)))
                 return true;

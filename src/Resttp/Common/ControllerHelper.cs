@@ -24,10 +24,25 @@ namespace Resttp.Common
             return GetControllers(assembly).Select(c => c.Name.Replace("Controller", string.Empty));
         }
 
+        /// <summary>
+        /// Gets all controller actions.
+        /// </summary>
+        /// <param name="assembly"></param>
+        /// <param name="controllerName"></param>
+        /// <returns></returns>
         public static IEnumerable<MethodInfo> GetActions(Assembly assembly, string controllerName)
         {
-            return GetController(assembly, controllerName)
-                .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            return GetActions(GetController(assembly, controllerName));
+        }
+
+        /// <summary>
+        /// Gets all controller actions.
+        /// </summary>
+        /// <param name="controllerType"></param>
+        /// <returns></returns>
+        public static IEnumerable<MethodInfo> GetActions(Type controllerType)
+        {
+            return controllerType.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
         }
 
     }

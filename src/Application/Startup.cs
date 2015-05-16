@@ -15,7 +15,7 @@ public class Startup
 {
     public void Configuration(IAppBuilder app)
     {
-          var config = new ResttpConfiguration(typeof(HomeController).Assembly);
+        var config = new ResttpConfiguration(typeof(HomeController).Assembly);
         config.MapHttpRoutesFromAttributes();
         config.HttpRoutes.AddRoutes
             (
@@ -23,7 +23,9 @@ public class Startup
             "/lt/",
             new
             {
-                controller = "Home"
+                controller = "Home",
+                action = "Index",
+                httpMethod = "Get"
             });
         config.HttpRoutes.AddRoutes
             (

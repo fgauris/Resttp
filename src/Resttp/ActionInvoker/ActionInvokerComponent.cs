@@ -11,6 +11,9 @@ namespace Resttp
     using AppFunc = Func<IDictionary<string, object>, Task>;
     using ContentNegotiator = ContentNegotiation.ContentNegotiator;
     using Resttp.ContentNegotiation;
+    using Resttp.ActionInvoker;
+    using System.Reflection;
+    using Resttp.Common;
 
     public class ActionInvokerComponent
     {
@@ -33,10 +36,11 @@ namespace Resttp
             if (controller == null)
                 throw new Exception("Controller not found in OWIN environment dictionary");
 
+
             object result = null;
             try
             {
-                result = await InvokeAction(controller);
+                result = await InvokeAction(controller, environment);
             }
             catch (Exception e)
             {
@@ -46,22 +50,41 @@ namespace Resttp
             await ReturnActionResultAsync(environment, result);
         }
 
-        private async Task<object> InvokeAction(RestController controller)
+        private async Task<object> InvokeAction(RestController controller, IDictionary<string, object> environment)
         {
+            var actionDescriptor = new ActionDescriptorGenerator().GenerateActionDescriptor(controller);
+            actionDescriptor.ActionName.ToString();
 
-            return new { Labas = "labas", Skaicius = 1 };
-            throw new NotImplementedException();
+            //new ActionParameterBinder().BindParameters(actionDescriptor, environment);
+            return await InvokeActionAsync(controller, actionDescriptor);
         }
+
+        private async Task<object> InvokeActionAsync(RestController controller, ActionDescriptor descriptor)
+        {
+            var controllerType = controller.GetType();
+            var actionMethod = controllerType.GetMethod(descriptor.ActionName);
+            var result = actionMethod.Invoke(controller, descriptor.ActionArguments.Select(a => a.ParamValue).ToArray());
+            if (result == null)
+                result = (object)DBNull.Value;
+            
+            return await Task.FromResult(result);
+        }
+
 
         private async Task ReturnActionResultAsync(IDictionary<string, object> environment, object @object)
         {
-            if (@object == null)
-                return;
-            var result = _contentNegotiator.NegotiateContent(@object.GetType(), environment, _formatters);
-            if (result == null)
-                await GenerateFailedToNegotiateContentError(environment, @object.GetType());
-            else
-                await WriteResultToStream(environment, @object, result);
+            try
+            {
+                var result = _contentNegotiator.NegotiateContent(@object.GetType(), environment, _formatters);
+                if (result == null)
+                    await GenerateFailedToNegotiateContentError(environment, @object.GetType());
+                else
+                    await WriteResultToResponse(environment, @object, result);
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
         }
 
         public async Task GenerateFailedToNegotiateContentError(IDictionary<string, object> enviroment, Type type)
@@ -70,11 +93,11 @@ namespace Resttp
             enviroment["owin.ResponseStatusCode"] = 500;
             using (var writer = new StreamWriter(responseBody))
             {
-                await writer.WriteAsync("Failed to negotatiate type " + type.Name);
+                await writer.WriteAsync("Failed to negotatiate type <" + type.Name + "> or no acceptable content type not found.");
             }
         }
 
-        public async Task WriteResultToStream(IDictionary<string, object> environment, object @object, ContentNegotiatorResult result)
+        public async Task WriteResultToResponse(IDictionary<string, object> environment, object @object, ContentNegotiatorResult result)
         {
             var stream = new MemoryStream();
             await result.Formatter.WriteToStreamAsync(@object.GetType(), @object, stream, null, null);
@@ -85,4 +108,20 @@ namespace Resttp
             await stream.CopyToAsync(response);
         }
     }
+
+    public class DummyClass
+    {
+        public string Labas { get; set; }
+
+        public int Ska { get; set; }
+
+        public DummyClass Child { get; set; }
+
+        public void Niekas()
+        {
+            Ska = 2222;
+        }
+    }
+
+
 }
