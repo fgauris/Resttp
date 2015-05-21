@@ -51,10 +51,13 @@ namespace Resttp
         private RestController CreateController(IDictionary<string, object> enviroment, IHttpRoute route, IDependencyResolver resolver)
         {
             var controller = resolver.Resolve(GetControllerType(route.ControllerName + "Controller")) as RestController;
-            controller.OwinEnvironment = enviroment;
-            controller.Request = new RequestContext(enviroment);
-            controller.Response = new ResponseContext(enviroment);
-            controller.Route = route;
+            if (controller != null)
+            {
+                controller.OwinEnvironment = enviroment;
+                controller.Request = new RequestContext(enviroment);
+                controller.Response = new ResponseContext(enviroment);
+                controller.Route = route;
+            }
             return controller;
         }
 

@@ -21,9 +21,9 @@ namespace Resttp
 
         private MediaTypeFormatterCollection _formatters;
 
-        private ContentNegotiator _contentNegotiator;
+        private IContentNegotiator _contentNegotiator;
 
-        public ActionInvokerComponent(AppFunc next, MediaTypeFormatterCollection formatters, ContentNegotiator contentNegotiator)
+        public ActionInvokerComponent(AppFunc next, MediaTypeFormatterCollection formatters, IContentNegotiator contentNegotiator)
         {
             _next = next;
             _formatters = formatters;
@@ -66,7 +66,7 @@ namespace Resttp
             var result = actionMethod.Invoke(controller, descriptor.ActionArguments.Select(a => a.ParamValue).ToArray());
             if (result == null)
                 result = (object)DBNull.Value;
-            
+
             return await Task.FromResult(result);
         }
 
@@ -75,11 +75,14 @@ namespace Resttp
         {
             try
             {
-                var result = _contentNegotiator.NegotiateContent(@object.GetType(), environment, _formatters);
-                if (result == null)
-                    await GenerateFailedToNegotiateContentError(environment, @object.GetType());
-                else
-                    await WriteResultToResponse(environment, @object, result);
+                if (!(@object is DBNull))
+                {
+                    var result = _contentNegotiator.NegotiateContent(@object.GetType(), environment, _formatters);
+                    if (result == null)
+                        await GenerateFailedToNegotiateContentError(environment, @object.GetType());
+                    else
+                        await WriteResultToResponse(environment, @object, result);
+                }
             }
             catch (Exception e)
             {
