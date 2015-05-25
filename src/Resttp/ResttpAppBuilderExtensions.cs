@@ -20,7 +20,6 @@ namespace Resttp
             app.Use<RoutingComponent>(new HttpRouteResolver(config.HttpRoutes));
             app.Use<ControlerCreatorComponent>(config.DependencyResolver, config.ControllersAssembly);
             app.Use<ActionInvokerComponent>(config.Formatters, config.ContentNegotiator, config.ActionParameterBinder);
-            
         }
     }
 }

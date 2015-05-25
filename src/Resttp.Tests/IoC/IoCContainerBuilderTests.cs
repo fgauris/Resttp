@@ -13,10 +13,12 @@ namespace Resttp.Tests.IoC
         public void Should_AddSetDelegateAndLookupType()
         {
             var builder = new IoCContainerBuilder();
-            var component = builder.AddInstance(() => 3);
+            var component = builder.AddInstance(() => 3).ForSelf();
+            Assert.IsNotNull(component.ComponentRegistration.CreateType);
             Assert.IsNotNull(component.ComponentRegistration.LookupTypes.First());
             Assert.IsNotNull(component.ComponentRegistration.ResultFunc);
-            Assert.IsTrue(component.ComponentRegistration.LookupTypes.First() == typeof(int));
+            Assert.IsTrue(component.ComponentRegistration.CreateType == typeof(int));
+            Assert.IsNotNull(component.ComponentRegistration.LookupTypes.First() == typeof(int));
             Assert.IsTrue(component.ComponentRegistration.ResultFunc() is int); 
         }
     }

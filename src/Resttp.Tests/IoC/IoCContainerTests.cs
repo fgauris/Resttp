@@ -12,7 +12,7 @@ namespace Resttp.Tests.IoC
         public void Should_ResolveAddInstance1()
         {
             var builder = new IoCContainerBuilder();
-            builder.AddInstance<IA1>(() => new A()).SetSingleton();
+            builder.AddInstance<IA1>(() => new A()).ForSelf().SetSingleton();
             var container = builder.Build();
             var ia1 = container.Resolve<IA1>();
             var ia2 = container.Resolve<IA1>();
@@ -25,7 +25,7 @@ namespace Resttp.Tests.IoC
         public void Should_ResolveAddInstance2()
         {
             var builder = new IoCContainerBuilder();
-            builder.AddInstance(() => new A()).SetSingleton();
+            builder.AddInstance(() => new A()).ForSelf().SetSingleton();
             var container = builder.Build();
             var a = container.Resolve<A>();
             Assert.IsNotNull(a);

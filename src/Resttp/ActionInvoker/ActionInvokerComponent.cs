@@ -72,7 +72,6 @@ namespace Resttp
             return await Task.FromResult(result);
         }
 
-
         private async Task ReturnActionResultAsync(IDictionary<string, object> environment, object @object)
         {
             try
@@ -113,20 +112,4 @@ namespace Resttp
             await stream.CopyToAsync(response);
         }
     }
-
-    public class DummyClass
-    {
-        public string Labas { get; set; }
-
-        public int Ska { get; set; }
-
-        public DummyClass Child { get; set; }
-
-        public void Niekas()
-        {
-            Ska = 2222;
-        }
-    }
-
-
 }
