@@ -68,6 +68,7 @@
     <Compile Include="ActionInvoker\ActionDescriptorGenerator.cs" />
     <Compile Include="ActionInvoker\ActionInvokerComponent.cs" />
     <Compile Include="ActionInvoker\ActionParameterBinder.cs" />
+    <Compile Include="ActionInvoker\IActionParameterBinder.cs" />
     <Compile Include="Common\ControllerHelper.cs" />
     <Compile Include="ControllerCreator\ControlerCreatorComponent.cs" />
     <Compile Include="Extensions\IoCContainerBuilderExtensions.cs" />

@@ -23,11 +23,14 @@ namespace Resttp
 
         private IContentNegotiator _contentNegotiator;
 
-        public ActionInvokerComponent(AppFunc next, MediaTypeFormatterCollection formatters, IContentNegotiator contentNegotiator)
+        private IActionParameterBinder _actionParameterBinder;
+
+        public ActionInvokerComponent(AppFunc next, MediaTypeFormatterCollection formatters, IContentNegotiator contentNegotiator, IActionParameterBinder parameterBinder)
         {
             _next = next;
             _formatters = formatters;
             _contentNegotiator = contentNegotiator;
+            _actionParameterBinder = parameterBinder;
         }
 
         public async Task Invoke(IDictionary<string, object> environment)
@@ -53,9 +56,8 @@ namespace Resttp
         private async Task<object> InvokeAction(RestController controller, IDictionary<string, object> environment)
         {
             var actionDescriptor = new ActionDescriptorGenerator().GenerateActionDescriptor(controller);
-            actionDescriptor.ActionName.ToString();
 
-            //new ActionParameterBinder().BindParameters(actionDescriptor, environment);
+            _actionParameterBinder.BindParameters(actionDescriptor, environment);
             return await InvokeActionAsync(controller, actionDescriptor);
         }
 

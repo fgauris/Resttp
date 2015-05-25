@@ -17,7 +17,7 @@ namespace Resttp
 
         public Resttp.ContentNegotiation.IContentNegotiator ContentNegotiator { get; set; }
 
-        //public IList<MediaTypeFormatter> Formatters { get; set; }
+        public Resttp.ActionInvoker.IActionParameterBinder ActionParameterBinder { get; set; }
 
         public ResttpConfiguration(Assembly controllersAssembly)
         {
@@ -26,6 +26,7 @@ namespace Resttp
             Formatters = new MediaTypeFormatterCollection();
             //Formatters.Remove(Formatters.First(f=>f is FormUrlEncodedMediaTypeFormatter));
             ContentNegotiator = new ContentNegotiation.ContentNegotiator();
+            ActionParameterBinder = new Resttp.ActionInvoker.ActionParameterBinder();
         }
 
         #region Routing
