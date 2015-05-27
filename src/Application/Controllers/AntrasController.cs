@@ -6,15 +6,9 @@ namespace Application.Controllers
     public class AntrasController : RestController
     {
         [ActionRoute("labas")]
-        public void Labas()
+        public int Labas()
         {
-
-        }
-
-        [ActionRoute("options/{id}")]
-        public void Options()
-        {
-
+            return 1;
         }
 
     }

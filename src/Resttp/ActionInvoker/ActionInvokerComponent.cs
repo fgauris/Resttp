@@ -43,7 +43,7 @@ namespace Resttp
             object result = null;
             try
             {
-                result = await InvokeAction(controller, environment);
+                result = await InvokeAction(controller, environment, _formatters);
             }
             catch (Exception e)
             {
@@ -53,11 +53,11 @@ namespace Resttp
             await ReturnActionResultAsync(environment, result);
         }
 
-        private async Task<object> InvokeAction(RestController controller, IDictionary<string, object> environment)
+        private async Task<object> InvokeAction(RestController controller, IDictionary<string, object> environment, IEnumerable<MediaTypeFormatter> formatters)
         {
             var actionDescriptor = new ActionDescriptorGenerator().GenerateActionDescriptor(controller);
 
-            _actionParameterBinder.BindParameters(actionDescriptor, environment);
+            _actionParameterBinder.BindParameters(actionDescriptor, environment, formatters);
             return await InvokeActionAsync(controller, actionDescriptor);
         }
 

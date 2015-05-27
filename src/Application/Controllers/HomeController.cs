@@ -7,7 +7,7 @@ namespace Application.Controllers
     {
         public DUmmy Index(int sk)
         {
-            return new DUmmy("Labas!!! Testas is kontrolerio", 111);
+            return new DUmmy("Labas!!! Testas is kontrolerio", sk);
         }
 
         public int Pagrindinis()
