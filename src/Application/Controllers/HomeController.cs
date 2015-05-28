@@ -18,7 +18,7 @@ namespace Application.Controllers
             return new Dummy(txt, sk);
         }
 
-        //POST Home/Pagrindinis
+        //POST /Home/Pagrindinis
         public int Pagrindinis()
         {
             return 1;
@@ -36,7 +36,7 @@ namespace Application.Controllers
             return "POST success";
         }
         
-        // PUT /Home/Put
+        // PUT /Home/PutPut
         [Http("Put")]
         public string PutPut()
         {

@@ -5,7 +5,7 @@ namespace Application.Controllers
     [ControllerRoute("First")]
     public class PirmasController : RestController
     {
-        //GET First/Anon?nr=1111&txt=labas
+        //GET /First/Anon?nr=1111&txt=labas
         /// <summary>
         /// Returns a data in anonymous class. Works only with content-type: application/json.
         /// </summary>
