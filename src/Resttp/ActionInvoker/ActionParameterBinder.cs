@@ -48,7 +48,7 @@ namespace Resttp.ActionInvoker
             }
             catch(FormatException e)
             {
-                throw new Exception("Failed to bind parameter " + actionParam.ParamName + " of type " + actionParam.ParamType.Name + ". Query string value: " + queryParam);
+                throw new FormatException("Failed to bind parameter " + actionParam.ParamName + " of type " + actionParam.ParamType.Name + ". Query string value: " + queryParam);
             }
         }
     }

@@ -5,40 +5,51 @@ namespace Application.Controllers
 {
     public class HomeController: RestController
     {
-        public DUmmy Index(int sk)
+
+        // GET /Main?sk=111&txt=labaslabas
+        /// <summary>
+        /// Returns parameters values in dummy class
+        /// </summary>
+        /// <param name="sk"></param>
+        /// <param name="txt"></param>
+        /// <returns></returns>
+        public Dummy Index(int sk, string txt)
         {
-            return new DUmmy("Labas!!! Testas is kontrolerio", sk);
+            return new Dummy(txt, sk);
         }
 
+        //POST Home/Pagrindinis
         public int Pagrindinis()
         {
-            throw new NotImplementedException();
+            return 1;
         }
 
-        public int Get()
+        // GET /Home/Get?nr=11111
+        public string Get(long nr)
         {
-            throw new NotImplementedException();
+            return "GET success with nr " + nr + ".";
         }
 
-        
-        public int Post()
+        // POST /Home/Post
+        public string Post()
         {
-            throw new NotImplementedException();
+            return "POST success";
         }
         
+        // PUT /Home/Put
         [Http("Put")]
-        public int PutPut()
+        public string PutPut()
         {
-            throw new NotImplementedException();
+            return "PUT success";
         }
     }
 
-    public class DUmmy
+    public class Dummy
     {
         public string Labas { get; set; }
         public int Sk { get; set; }
 
-        public DUmmy(string labas, int? sk)
+        public Dummy(string labas, int? sk)
         {
             Labas = labas ?? "Laba!!";
             Sk = sk ?? 5;

@@ -39,19 +39,28 @@ namespace Resttp
             if (controller == null)
                 throw new Exception("Controller not found in OWIN environment dictionary");
 
-
+            FormatException bindFailedException = null;
             object result = null;
             try
             {
                 result = await InvokeAction(controller, environment, _formatters);
+            }
+            catch (FormatException e)
+            {
+                bindFailedException = e;
             }
             catch (Exception e)
             {
                 result = e;
             }
 
-            await ReturnActionResultAsync(environment, result);
+            if(bindFailedException == null)
+                await ReturnActionResultAsync(environment, result);
+            else
+                await GenerateFailedToBindParameterError(environment, bindFailedException);
         }
+
+        
 
         private async Task<object> InvokeAction(RestController controller, IDictionary<string, object> environment, IEnumerable<MediaTypeFormatter> formatters)
         {
@@ -91,13 +100,23 @@ namespace Resttp
             }
         }
 
-        public async Task GenerateFailedToNegotiateContentError(IDictionary<string, object> enviroment, Type type)
+        public async Task GenerateFailedToNegotiateContentError(IDictionary<string, object> environment, Type type)
         {
-            var responseBody = enviroment["owin.ResponseBody"] as Stream;
-            enviroment["owin.ResponseStatusCode"] = 500;
+            var responseBody = environment["owin.ResponseBody"] as Stream;
+            environment["owin.ResponseStatusCode"] = 500;
             using (var writer = new StreamWriter(responseBody))
             {
                 await writer.WriteAsync("Failed to negotatiate type <" + type.Name + "> or no acceptable content type not found.");
+            }
+        }
+
+        private async Task GenerateFailedToBindParameterError(IDictionary<string, object> environment, FormatException e)
+        {
+            var responseBody = environment["owin.ResponseBody"] as Stream;
+            environment["owin.ResponseStatusCode"] = 500;
+            using (var writer = new StreamWriter(responseBody))
+            {
+                await writer.WriteAsync(e.Message);
             }
         }
 

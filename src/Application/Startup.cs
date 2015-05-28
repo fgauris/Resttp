@@ -20,7 +20,7 @@ public class Startup
         config.HttpRoutes.AddRoutes
             (
             "Home",
-            "/lt/",
+            "/Main",
             new
             {
                 controller = "Home",
@@ -30,7 +30,7 @@ public class Startup
         config.HttpRoutes.AddRoutes
             (
             "Home",
-            "/lt/{action}",
+            "/{controller}/{action}",
             new
             {
                 controller = "Home"
