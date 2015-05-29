@@ -3,7 +3,7 @@ Web services framework for my Bachelor thesis.
 //---------- Structure
 
 Application
-A simple console application with auto-host functionality. Contains few controllers to test a basic behaviour.
+A simple console application with self-host functionality. Contains few controllers to test a basic behaviour.
 
 Resttp
 A class librabry, which contains most of the framework logic.
@@ -24,6 +24,9 @@ Resttp.Tests
 Unit tests to test some of the frameworks inner behaviour.
 
 
+//---------- How to run an application?
+
+Run Application console application. It will self-host and will be available at http://localhost:61111.
 
 //---------- Example requests
 
